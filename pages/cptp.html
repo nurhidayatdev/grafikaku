@@ -1,0 +1,117 @@
+<!-- SECTION 2: CAPAIAN & TUJUAN PEMBELAJARAN (Adegan 2 / F02) -->
+    <section id="cptp" class="view-section">
+      <div class="breadcrumb">
+        <a onclick="navigateTo('beranda')">Beranda</a>
+        <span class="sep">/</span>
+        <span class="current">Capaian &amp; Tujuan Pembelajaran</span>
+      </div>
+
+      <h1 style="color: var(--navy);">Capaian &amp; Tujuan Pembelajaran</h1>
+      <p class="small" style="margin-bottom: 24px;">Pelajari kompetensi yang akan dicapai serta ikuti aktivitas pemanasan sebelum membuka Modul 1.</p>
+
+      <!-- Capaian Pembelajaran Box -->
+      <div class="cp-hero-box">
+        <h2>Capaian Pembelajaran (CP)</h2>
+        <div class="cp-element">Fase F &bull; Elemen Prinsip Dasar Desain dan Komunikasi</div>
+        <p class="cp-text">
+          &ldquo;Murid mampu menerapkan prinsip unity (kesatuan), balance (keseimbangan), composition (komposisi), proportion (proporsi), rhythm (irama), emphasis (penekanan), simplicity (kesederhanaan), clarity (kejelasan), space (ruang), serta fungsi komunikasi visual kepada komunikator dan komunikan.&rdquo;
+        </p>
+      </div>
+
+      <!-- Tiga Kartu TP Berurutan -->
+      <h2 style="color: var(--navy); margin-bottom: 16px;">Tiga Tujuan Pembelajaran (TP)</h2>
+      <div class="tp-container">
+        
+        <div class="tp-box">
+          <div class="tp-header">
+            <span class="tp-badge">TP 1</span>
+            <span class="tp-target">&rarr; Modul 1</span>
+          </div>
+          <p>Peserta didik mampu menjelaskan sembilan prinsip dasar desain grafis (unity, balance, composition, proportion, rhythm, emphasis, simplicity, clarity, space) serta mengidentifikasi penerapannya pada karya desain grafis.</p>
+        </div>
+
+        <div class="tp-box">
+          <div class="tp-header">
+            <span class="tp-badge">TP 2</span>
+            <span class="tp-target">&rarr; Modul 2</span>
+          </div>
+          <p>Peserta didik mampu mengoperasikan fitur dasar perangkat lunak desain grafis (Photoshop/Canva/CorelDRAW) sesuai prosedur untuk membuat dan menyimpan objek grafis sederhana.</p>
+        </div>
+
+        <div class="tp-box">
+          <div class="tp-header">
+            <span class="tp-badge">TP 3</span>
+            <span class="tp-target">&rarr; Modul 3</span>
+          </div>
+          <p>Peserta didik mampu menerapkan prinsip dasar desain grafis dalam membuat karya desain visual yang komunikatif, dengan memperhatikan kejelasan pesan, sasaran audiens, dan fungsi komunikasi visual.</p>
+        </div>
+
+      </div>
+
+      <!-- Pemanasan Interaktif (Warmup Activity sesuai Section 1 Wireframe Screen 2) -->
+      <div class="warmup-box">
+        <div class="warmup-header">
+          <div class="warmup-title">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z"></path></svg>
+            Aktivitas Pemanasan: Pasangkan Istilah Kunci
+          </div>
+          <span class="warmup-score-badge" id="warmupScoreBadge">Tercocokkan: 0 / 4</span>
+        </div>
+        <p class="small" style="color: #92400E; margin-bottom: 14px;">
+          Klik satu nama istilah di kolom kiri, lalu klik arti yang paling sesuai di kolom kanan untuk memasangkannya.
+        </p>
+
+        <div class="warmup-grid">
+          <div class="warmup-term-col">
+            <div class="warmup-card" data-term="unity" onclick="handleWarmupClick(this, 'term')">
+              <span>Unity</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-term="balance" onclick="handleWarmupClick(this, 'term')">
+              <span>Balance</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-term="rhythm" onclick="handleWarmupClick(this, 'term')">
+              <span>Rhythm</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-term="emphasis" onclick="handleWarmupClick(this, 'term')">
+              <span>Emphasis</span>
+              <span class="small match-mark"></span>
+            </div>
+          </div>
+
+          <div class="warmup-def-col">
+            <div class="warmup-card" data-def="balance" onclick="handleWarmupClick(this, 'def')">
+              <span>Keseimbangan bobot visual pada bidang gambar</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-def="emphasis" onclick="handleWarmupClick(this, 'def')">
+              <span>Penekanan informasi utama sebagai pusat perhatian</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-def="unity" onclick="handleWarmupClick(this, 'def')">
+              <span>Kesatuan unsur dan keselarasan antarbagian</span>
+              <span class="small match-mark"></span>
+            </div>
+            <div class="warmup-card" data-def="rhythm" onclick="handleWarmupClick(this, 'def')">
+              <span>Pengulangan teratur yang memandu arah pandang</span>
+              <span class="small match-mark"></span>
+            </div>
+          </div>
+        </div>
+
+        <div id="warmupFeedback" class="warmup-feedback"></div>
+      </div>
+
+      <!-- Action Navigation Buttons -->
+      <div style="display: flex; gap: 14px; flex-wrap: wrap;">
+        <button class="btn-primary" id="btnStartModul1" onclick="navigateTo('modul1')">
+          <span>Mulai Modul 1 (Prinsip Dasar Desain)</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+        <button class="btn-secondary" onclick="navigateTo('beranda')">
+          <span>Kembali ke Beranda</span>
+        </button>
+      </div>
+    </section>

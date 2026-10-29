@@ -1,0 +1,144 @@
+<!-- SECTION 1: BERANDA (Adegan 1 / F01) -->
+    <section id="beranda" class="view-section">
+      <!-- Hero Card -->
+      <div class="hero-card">
+        <h1>Belajar Desain Grafis, Mudah &amp; Interaktif</h1>
+        <p class="hero-desc">
+          Selamat datang di GrafikaKu. Pelajari cara menyusun unsur desain, coba alat dasar pada software pilihanmu, lalu buat poster yang menyampaikan pesan dengan jelas. Mulailah dari Modul 1 dan ikuti latihan secara bertahap.
+        </p>
+        <button class="btn-primary" onclick="navigateTo('cptp')">
+          <span>Mulai Belajar</span>
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+        </button>
+      </div>
+
+      <!-- Bilah Kemajuan Belajar Keseluruhan -->
+      <div class="overall-progress-card">
+        <div class="progress-meta">
+          <h3>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+            Progres Belajar Keseluruhan
+          </h3>
+          <p class="small" style="margin:0;">Modul 1: 40% selesai &bull; Modul 2 &amp; 3 terkunci sampai syarat kelulusan terpenuhi.</p>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill" style="width: 13%;"></div>
+          </div>
+        </div>
+        <div style="text-align: right;">
+          <span style="font-size: 26px; font-weight: 800; color: var(--navy); font-family: 'Poppins';">13%</span>
+          <span class="small" style="display:block;">Total Selesai</span>
+        </div>
+      </div>
+
+      <!-- Grid Tiga Modul Pembelajaran Sesuai Section 1 Wireframe -->
+      <h2 style="color: var(--navy); margin-bottom: 16px;">Modul Pembelajaran</h2>
+      <div class="module-grid">
+        
+        <!-- Modul 1 (Terbuka) -->
+        <div class="mod-card unlocked" onclick="navigateTo('modul1')">
+          <div>
+            <div class="mod-card-top">
+              <div class="mod-number-badge">1</div>
+              <span class="status-pill open">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 8 12 12 14 14"></polyline></svg>
+                Terbuka
+              </span>
+            </div>
+            <h3 class="mod-title">Modul 1: Prinsip Dasar Desain</h3>
+            <p class="mod-desc">Pelajari 9 prinsip dasar desain (Unity, Balance, Composition, dll.), amati karya beranotasi, serta ikuti latihan interaktif.</p>
+          </div>
+          <div class="mod-prog-box">
+            <div class="mod-prog-label">
+              <span>Progres Belajar</span>
+              <span>40%</span>
+            </div>
+            <div class="mod-bar">
+              <div class="mod-bar-fill" style="width: 40%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modul 2 (Terkunci) -->
+        <div class="mod-card locked" onclick="openLockedModal('Modul 2: Software Desain Grafis', 'Selesaikan Modul 1 dengan skor kuis minimal 75 terlebih dahulu.')">
+          <div>
+            <div class="mod-card-top">
+              <div class="mod-number-badge">2</div>
+              <span class="status-pill locked">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Terkunci
+              </span>
+            </div>
+            <h3 class="mod-title">Modul 2: Software Desain Grafis</h3>
+            <p class="mod-desc">Praktik antarmuka &amp; fitur dasar Adobe Photoshop, Canva, dan CorelDRAW sesuai SOP penyimpanan serta ekspor karya.</p>
+          </div>
+          <div class="mod-prog-box">
+            <div class="mod-prog-label">
+              <span>Progres Belajar</span>
+              <span>0% (Terkunci)</span>
+            </div>
+            <div class="mod-bar">
+              <div class="mod-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Modul 3 (Terkunci) -->
+        <div class="mod-card locked" onclick="openLockedModal('Modul 3: Komunikasi Visual', 'Selesaikan Modul 2 terlebih dahulu untuk membuka proyek komunikasi visual.')">
+          <div>
+            <div class="mod-card-top">
+              <div class="mod-number-badge">3</div>
+              <span class="status-pill locked">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                Terkunci
+              </span>
+            </div>
+            <h3 class="mod-title">Modul 3: Komunikasi Visual</h3>
+            <p class="mod-desc">Analisis diagram alur komunikator-pesan-media-komunikan dan proyek mini merancang poster yang komunikatif.</p>
+          </div>
+          <div class="mod-prog-box">
+            <div class="mod-prog-label">
+              <span>Progres Belajar</span>
+              <span>0% (Terkunci)</span>
+            </div>
+            <div class="mod-bar">
+              <div class="mod-bar-fill" style="width: 0%;"></div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Quick Nav Bar (Sesuai wireframe Lo-Fi & Hi-Fi Section 1) -->
+      <div class="quick-nav-card">
+        <a onclick="openGlossaryModal()">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+          Buka Glosarium Desain
+        </a>
+        <span style="color:#CBD5E1;">&bull;</span>
+        <a onclick="navigateTo('cptp')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline></svg>
+          Lihat Panduan CP &amp; TP
+        </a>
+        <span style="color:#CBD5E1;">&bull;</span>
+        <a onclick="navigateTo('testcase')">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 11l3 3L22 4"></path><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"></path></svg>
+          Lembar Uji Black Box (F03-F04)
+        </a>
+      </div>
+
+      <!-- Petunjuk Belajar Siswa (6 Langkah Resmi Naskah) -->
+      <div class="instructions-card">
+        <h3>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+          Petunjuk Belajar Mandiri
+        </h3>
+        <ol class="steps-list">
+          <li><strong>Baca tujuan dan teks singkat</strong> pada setiap halaman sebelum masuk ke contoh visual.</li>
+          <li><strong>Amati gambar dan jelaskan bukti visual</strong> sebelum menyebut atau menyimpulkan prinsipnya.</li>
+          <li><strong>Kerjakan latihan</strong>, cermati umpan balik langsung, dan ulangi materi yang belum dipahami.</li>
+          <li><strong>Kerjakan praktik mandiri di luar web</strong> melalui satu software pilihan (Photoshop, Canva, atau CorelDRAW).</li>
+          <li><strong>Simpan berkas kerja dan ekspor format PNG</strong> untuk dinilai oleh guru sebagai bukti kompetensi.</li>
+          <li><strong>Gunakan kuis untuk menguji konsep</strong>; kuis melengkapi dan tidak menggantikan bukti keterampilan karya.</li>
+        </ol>
+      </div>
+    </section>

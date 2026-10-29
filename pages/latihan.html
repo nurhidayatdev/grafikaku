@@ -1,0 +1,53 @@
+<!-- SECTION 4: LATIHAN INTERAKTIF (Adegan 4 / F09) -->
+    <section id="latihan" class="view-section">
+      <div class="breadcrumb">
+        <a onclick="navigateTo('beranda')">Beranda</a>
+        <span class="sep">/</span>
+        <a onclick="navigateTo('modul1')">Modul 1</a>
+        <span class="sep">/</span>
+        <span class="current">Latihan Interaktif</span>
+      </div>
+
+      <div class="exercise-card">
+        <span class="subtopic-badge">Aktivitas Latihan 1</span>
+        <h1 style="color: var(--navy); margin-top: 8px;">Tandai Bagian Penekanan (Emphasis)</h1>
+        <p class="small" style="margin-bottom: 18px;">
+          Amati perbandingan karya grafis di bawah ini. Pilih karya atau bagian yang secara efektif menunjukkan penekanan (emphasis) sebagai pusat perhatian utama.
+        </p>
+
+        <div class="interactive-select-grid">
+          <div class="select-artwork-box" id="optKaryaA" onclick="selectExerciseOption('A')">
+            <div style="font-weight: 700; color: var(--navy); margin-bottom: 8px;">Karya A (Tanpa Hierarki)</div>
+            <svg width="100%" height="140" viewBox="0 0 240 140">
+              <rect width="240" height="140" fill="#E2E8F0" rx="6"/>
+              <circle cx="50" cy="70" r="22" fill="#94A3B8"/>
+              <circle cx="120" cy="70" r="22" fill="#94A3B8"/>
+              <circle cx="190" cy="70" r="22" fill="#94A3B8"/>
+            </svg>
+            <p class="small" style="margin-top: 8px; margin-bottom:0;">Ketiga unsur berukuran dan berkontras sama.</p>
+          </div>
+
+          <div class="select-artwork-box" id="optKaryaB" onclick="selectExerciseOption('B')">
+            <div style="font-weight: 700; color: var(--navy); margin-bottom: 8px;">Karya B (Dengan Emphasis)</div>
+            <svg width="100%" height="140" viewBox="0 0 240 140">
+              <rect width="240" height="140" fill="#EEF2FF" rx="6"/>
+              <circle cx="50" cy="70" r="16" fill="#94A3B8" opacity="0.6"/>
+              <circle cx="120" cy="70" r="34" fill="#4338CA"/>
+              <circle cx="190" cy="70" r="16" fill="#94A3B8" opacity="0.6"/>
+            </svg>
+            <p class="small" style="margin-top: 8px; margin-bottom:0;">Unsur tengah diperbesar dengan warna indigo pekat.</p>
+          </div>
+        </div>
+
+        <button class="btn-primary" id="btnCheckExercise" onclick="checkExerciseAnswer()" disabled>
+          Periksa Jawaban
+        </button>
+
+        <div id="exerciseFeedback" style="margin-top: 16px;"></div>
+
+        <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
+          <button class="btn-secondary" onclick="navigateTo('modul1')">Kembali ke Materi Modul 1</button>
+          <button class="btn-primary" onclick="navigateTo('kuis')">Lanjut ke Kuis Evaluasi &rarr;</button>
+        </div>
+      </div>
+    </section>
