@@ -534,9 +534,17 @@ function downloadFileLatihan() {
 
 // --- Modul 3 Communication Flow Diagram (F08) ---
 let flowSelected = {};
-function assignFlowLabel(slotId, labelValue) {
-  flowSelected[slotId] = labelValue;
-  const slotEl = document.getElementById(slotId);
+function assignFlowLabel(labelValue) {
+  // Automatically fill next empty slot (slot1 -> slot2 -> slot3 -> slot4)
+  const slots = ['slot1', 'slot2', 'slot3', 'slot4'];
+  const emptySlot = slots.find(s => !flowSelected[s]);
+  if (!emptySlot) {
+    const fb = document.getElementById('flowFeedback');
+    if (fb) fb.innerHTML = '<div style="background:#FFFBEB; color:#B45309; padding:10px 14px; border-radius:6px; font-weight:600;">Semua kotak telah terisi. Tekan tombol "Reset Bagan" jika ingin mengulang.</div>';
+    return;
+  }
+  flowSelected[emptySlot] = labelValue;
+  const slotEl = document.getElementById(emptySlot);
   if (slotEl) {
     slotEl.textContent = labelValue;
     slotEl.classList.add('filled');
