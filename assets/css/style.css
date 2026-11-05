@@ -1153,3 +1153,79 @@
         align-items: stretch;
       }
     }
+
+
+    /* --- Accordion Glosarium (F01 & F12) --- */
+    .gloss-accordion-item {
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 10px;
+      overflow: hidden;
+      background: var(--white);
+      transition: all 0.2s;
+    }
+    .gloss-accordion-item:hover {
+      border-color: #CBD5E1;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+    }
+    .gloss-accordion-header {
+      padding: 14px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      background: #F8FAFC;
+      user-select: none;
+    }
+    .gloss-accordion-header:hover {
+      background: #F1F5F9;
+    }
+    .gloss-chevron {
+      font-size: 12px;
+      color: #64748B;
+      transition: transform 0.2s;
+    }
+    .gloss-accordion-body {
+      padding: 0 18px;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.25s ease-out, padding 0.25s ease;
+      background: var(--white);
+    }
+    .gloss-accordion-body.open {
+      padding: 14px 18px;
+      max-height: 300px;
+      border-top: 1px solid var(--border);
+    }
+
+    /* --- Status Pills & Locked Card (F14) --- */
+    .status-pill.status-locked {
+      background: #FEE2E2;
+      color: #DC2626;
+      border: 1px solid #FECACA;
+    }
+    .status-pill.status-ready {
+      background: #DEF7EC;
+      color: #0E9F6E;
+      border: 1px solid #BCF0DA;
+    }
+    .card.locked-card {
+      opacity: 0.85;
+      position: relative;
+    }
+    .card.locked-card::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: rgba(248, 250, 252, 0.4);
+      border-radius: 12px;
+      pointer-events: none;
+    }
+
+    /* --- Flow Diagram Slot (F08) --- */
+    .flow-slot.filled {
+      background: #EEF2FF;
+      border-color: var(--navy);
+      color: var(--navy);
+      font-weight: 700;
+    }

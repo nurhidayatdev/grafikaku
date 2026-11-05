@@ -145,6 +145,3 @@ const principlesData = [
         ]
       }
     ];
-
-    let currentPrincipleIndex = 1; // Default ke Balance (Prinsip ke-2)
-    let currentBalanceMode = 'simetris';
