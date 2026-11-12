@@ -37,6 +37,7 @@
     <section id="beranda" class="view-section active">
       <!-- Hero Card -->
       <div class="hero-card">
+        <div id="studentIdentityBadge" class="student-identity-badge" style="display: none;"></div>
         <h1>Belajar Desain Grafis, Mudah &amp; Interaktif</h1>
         <p class="hero-desc">
           Selamat datang di GrafikaKu. Pelajari cara menyusun unsur desain, coba alat dasar pada software pilihanmu, lalu buat poster yang menyampaikan pesan dengan jelas. Mulailah dari Modul 1 dan ikuti latihan secara bertahap.
@@ -59,13 +60,13 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--indigo)" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
             Progres Belajar Keseluruhan
           </h3>
-          <p class="small" id="overallProgressSub" style="margin:0;">Modul 1: Sedang dipelajari • Modul 2 &amp; 3 terbuka bertahap.</p>
+          <p class="small" id="overallProgressSub" style="margin:0;">Belum ada progres. Mulai dari Modul 1 untuk membuka modul berikutnya.</p>
           <div class="progress-bar-container">
-            <div class="progress-bar-fill" id="overallProgressBarFill" style="width: 15%;"></div>
+            <div class="progress-bar-fill" id="overallProgressBarFill" style="width: 0%;"></div>
           </div>
         </div>
         <div style="text-align: right;">
-          <span id="overallProgressNumber" style="font-size: 26px; font-weight: 800; color: var(--black); font-family: 'Poppins';">15%</span>
+          <span id="overallProgressNumber" style="font-size: 26px; font-weight: 800; color: var(--black); font-family: 'Poppins';">0%</span>
           <span class="small" style="display:block;">Total Selesai</span>
         </div>
       </div>
@@ -90,10 +91,10 @@
           <div class="mod-prog-box">
             <div class="mod-prog-label">
               <span>Progres Belajar</span>
-              <span id="mod1ProgressText">20%</span>
+              <span id="mod1ProgressText">0% (0/9 Prinsip)</span>
             </div>
             <div class="mod-bar">
-              <div class="mod-bar-fill" id="mod1ProgressBar" style="width: 20%;"></div>
+              <div class="mod-bar-fill" id="mod1ProgressBar" style="width: 0%;"></div>
             </div>
           </div>
         </div>
@@ -998,7 +999,7 @@
           <button class="toggle-btn" id="btnScopeM2" onclick="setGlossaryScope('Modul 2')">Modul 2 (Software)</button>
           <button class="toggle-btn" id="btnScopeM3" onclick="setGlossaryScope('Modul 3')">Modul 3 (Komunikasi)</button>
         </div>
-        <input type="text" id="glossarySearch" placeholder="Cari istilah (contoh: Balance, Unity, Space)..." onkeyup="filterGlossary()" style="width:100%; height:44px; padding:0 14px; border:1px solid var(--border); border-radius:8px; margin-bottom:16px; font-size:14px;">
+        <input type="text" id="glossarySearch" placeholder="Cari istilah (contoh: Balance, Unity, Space)..." onkeyup="filterGlossary()" style="width:100%; height:44px; padding:0 14px; border:2px solid var(--black); border-radius:8px; margin-bottom:16px; font-size:14px; color: var(--black); background: var(--white);">
         <div id="glossaryList" style="max-height: 380px; overflow-y: auto;"></div>
       </div>
     </div>
@@ -1022,14 +1023,48 @@
     </div>
   </div>
 
+  <!-- MODAL: Identitas Siswa (Untuk Monitoring Evaluasi) -->
+  <div class="modal-overlay" id="studentProfileModal" onclick="closeModalOnBackdrop(event, 'studentProfileModal')">
+    <div class="modal-dialog" style="max-width: 460px;">
+      <div class="modal-header" style="background: var(--yellow); border-bottom: 2.5px solid var(--black); padding: 18px 24px;">
+        <h3 style="margin: 0; color: var(--black); font-size: 18px;">👤 Identitas Siswa</h3>
+        <button class="modal-close" onclick="closeStudentProfileModal()" aria-label="Tutup">&times;</button>
+      </div>
+      <form onsubmit="saveStudentProfile(event)" class="modal-body" style="padding: 24px; background: var(--white); color: var(--black);">
+        <p class="small" style="color: var(--black); margin-bottom: 16px;">
+          Isi nama dan kelasmu agar progres belajar, skor kuis, dan karya Modul 2 tercatat di monitoring guru.
+        </p>
+        <div id="studentProfileError" style="display: none; background: #FFE4E6; border: 2px solid var(--black); color: var(--black); padding: 10px 12px; border-radius: 8px; font-size: 13px; font-weight: 700; margin-bottom: 14px;"></div>
+        <div style="margin-bottom: 14px;">
+          <label for="inputStudentNama" style="display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--black);">Nama Lengkap *</label>
+          <input type="text" id="inputStudentNama" required placeholder="Contoh: Budi Santoso" style="width: 100%; height: 42px; padding: 0 12px; border: 2px solid var(--black); border-radius: 8px; font-size: 14px; color: var(--black); background: var(--white);">
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 110px; gap: 12px; margin-bottom: 20px;">
+          <div>
+            <label for="inputStudentKelas" style="display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--black);">Kelas *</label>
+            <input type="text" id="inputStudentKelas" required placeholder="Contoh: XI DKV 1" style="width: 100%; height: 42px; padding: 0 12px; border: 2px solid var(--black); border-radius: 8px; font-size: 14px; color: var(--black); background: var(--white);">
+          </div>
+          <div>
+            <label for="inputStudentAbsen" style="display: block; font-weight: 700; font-size: 13px; margin-bottom: 6px; color: var(--black);">No. Absen</label>
+            <input type="text" id="inputStudentAbsen" placeholder="01" style="width: 100%; height: 42px; padding: 0 12px; border: 2px solid var(--black); border-radius: 8px; font-size: 14px; color: var(--black); background: var(--white);">
+          </div>
+        </div>
+        <button type="submit" class="btn-primary" style="width: 100%;">Simpan &amp; Lanjutkan</button>
+      </form>
+    </div>
+  </div>
+
   <footer>
     <div style="max-width: 1120px; margin: 0 auto;">
       <strong>GrafikaKu</strong> &mdash; Website Pembelajaran Desain Grafis Kelas XI &bull; Kurikulum Merdeka (Fase F)<br>
-      <span class="small">Pengembang Kerangka: Nur Hidayat &bull; Pengembang Modul 1: Nailha Dinda Aprilia &bull; Kelompok 6 Multimedia Pembelajaran 2026</span>
+      <span class="small">Pengembang Kerangka: Nur Hidayat &bull; Pengembang Modul 1: Nailha Dinda Aprilia &bull; Kelompok 6 Multimedia Pembelajaran 2026 &bull; <a href="guru.html" style="color: inherit; font-weight: 700; text-decoration: underline;">Dashboard Guru</a></span>
     </div>
   </footer>
 
   <!-- Scripts modular -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase_config.js"></script>
+  <script src="assets/js/supabase_sync.js"></script>
   <script src="assets/js/data/principles.js"></script>
   <script src="assets/js/data/quiz_glossary.js"></script>
   <script src="assets/js/app.js"></script>

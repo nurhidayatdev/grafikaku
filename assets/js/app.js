@@ -158,7 +158,7 @@ function checkPrincipleCheckpoint() {
 
   if (!selectedKey) {
     fb.innerHTML = `
-      <div style="background: var(--red-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 12px 16px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--red-light); border: 2px solid var(--black); border-radius: 10px; padding: 12px 16px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         &times; Silakan pilih salah satu opsi jawaban sebelum memeriksa!
       </div>
     `;
@@ -173,14 +173,23 @@ function checkPrincipleCheckpoint() {
       localStorage.setItem('grafikaku_passed_checkpoints', JSON.stringify(passed));
     }
 
+    if (typeof syncProgressToSupabase === 'function') {
+      syncProgressToSupabase('m1_checkpoint_passed', {
+        principle_index: currentPrincipleIndex,
+        principle_title: principlesData[currentPrincipleIndex]?.title || '',
+        is_passed: true
+      });
+    }
+
     fb.innerHTML = `
-      <div style="background: var(--green-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 14px 18px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--green-light); border: 2px solid var(--black); border-radius: 10px; padding: 14px 18px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         ✓ ${q.explanation}
       </div>
     `;
 
     renderPrincipleCheckpoint();
     renderPrincipleTabs();
+    updateProgressUI();
 
     if (currentPrincipleIndex === principlesData.length - 1) {
       const banner = document.getElementById('modul1CompletionBanner');
@@ -192,7 +201,7 @@ function checkPrincipleCheckpoint() {
   } else {
     // Incorrect! Beri umpan balik dan reset opsi yang diacak ulang jika siswa mau mencoba lagi
     fb.innerHTML = `
-      <div style="background: var(--red-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 14px 18px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--red-light); border: 2px solid var(--black); border-radius: 10px; padding: 14px 18px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         &times; Jawaban belum tepat. Cermati kembali materi dan amati karya beranotasi di atas, lalu coba lagi!
       </div>
     `;
@@ -208,11 +217,18 @@ function checkPrincipleCheckpoint() {
 
 // --- Modul 1 Intro Modal (Catatan Dosen: Hari ini kita akan belajar...) ---
 function startLearningModul1() {
-  const modal = document.getElementById('modul1IntroModal');
-  if (modal) {
-    modal.classList.add('open');
+  const openIntro = () => {
+    const modal = document.getElementById('modul1IntroModal');
+    if (modal) {
+      modal.classList.add('open');
+    } else {
+      navigateTo('modul1');
+    }
+  };
+  if (typeof requireStudentProfile === 'function') {
+    requireStudentProfile(openIntro);
   } else {
-    navigateTo('modul1');
+    openIntro();
   }
 }
 
@@ -239,9 +255,9 @@ function isModul2Unlocked() {
 function getVisitedPrinciples() {
   try {
     const raw = localStorage.getItem('grafikaku_visited_principles');
-    return raw ? JSON.parse(raw) : [0]; // default index 0 (Unity) visited
+    return raw ? JSON.parse(raw) : [];
   } catch(e) {
-    return [0];
+    return [];
   }
 }
 
@@ -255,9 +271,9 @@ function markPrincipleVisited(index) {
 }
 
 function updateProgressUI() {
-  const visited = getVisitedPrinciples();
+  const passed = getPassedCheckpoints();
   const total = (typeof principlesData !== 'undefined') ? principlesData.length : 9;
-  const count = visited.length;
+  const count = passed.length;
   const pct = Math.round((count / total) * 100);
 
   // Update Modul 1 card progress in Beranda
@@ -265,6 +281,25 @@ function updateProgressUI() {
   const m1Bar = document.getElementById('mod1ProgressBar');
   if (m1Text) m1Text.textContent = `${pct}% (${count}/${total} Prinsip)`;
   if (m1Bar) m1Bar.style.width = pct + '%';
+
+  // Overall progress (9 M1 checkpoints + 1 Kuis Akhir + 1 M2 submit + 1 M3 checkpoint = 12)
+  const kuisDone = isModul2Unlocked() ? 1 : 0;
+  const m2Done = localStorage.getItem('grafikaku_m2_submitted') === 'true' ? 1 : 0;
+  const m3Done = localStorage.getItem('grafikaku_m3_checkpoint_passed') === 'true' ? 1 : 0;
+  const totalMilestones = total + 3;
+  const doneMilestones = count + kuisDone + m2Done + m3Done;
+  const overallPct = Math.round((doneMilestones / totalMilestones) * 100);
+
+  const overallBar = document.getElementById('overallProgressBarFill');
+  const overallNum = document.getElementById('overallProgressNumber');
+  const overallSub = document.getElementById('overallProgressSub');
+  if (overallBar) overallBar.style.width = overallPct + '%';
+  if (overallNum) overallNum.textContent = overallPct + '%';
+  if (overallSub) {
+    overallSub.textContent = overallPct === 0
+      ? 'Belum ada progres. Mulai dari Modul 1 untuk membuka modul berikutnya.'
+      : `Modul 1: ${count}/${total} prinsip selesai • Kuis: ${kuisDone ? 'Tuntas' : 'Belum'} • Modul 2: ${m2Done ? 'Terkumpul' : 'Belum'} • Modul 3: ${m3Done ? 'Selesai' : 'Belum'}`;
+  }
 
   // Overall banner or badges if exist
   const homeVisitedCount = document.getElementById('homeVisitedCount');
@@ -287,21 +322,24 @@ function updateUnlockUI() {
   const m3Bar = document.getElementById('modul3ProgressBar');
 
   if (unlocked) {
+    const m2Done = localStorage.getItem('grafikaku_m2_submitted') === 'true';
+    const m3Done = localStorage.getItem('grafikaku_m3_checkpoint_passed') === 'true';
+
     if (m2Card) m2Card.classList.remove('locked');
     if (m2Badge) {
       m2Badge.className = 'status-pill open';
       m2Badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Terbuka';
     }
-    if (m2Text) m2Text.textContent = 'Siap Dipelajari';
-    if (m2Bar) m2Bar.style.width = '10%';
+    if (m2Text) m2Text.textContent = m2Done ? '100% (Terkumpul)' : '0% (Siap Dipelajari)';
+    if (m2Bar) m2Bar.style.width = m2Done ? '100%' : '0%';
 
     if (m3Card) m3Card.classList.remove('locked');
     if (m3Badge) {
       m3Badge.className = 'status-pill open';
       m3Badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Terbuka';
     }
-    if (m3Text) m3Text.textContent = 'Siap Dipelajari';
-    if (m3Bar) m3Bar.style.width = '10%';
+    if (m3Text) m3Text.textContent = m3Done ? '100% (Selesai)' : '0% (Siap Dipelajari)';
+    if (m3Bar) m3Bar.style.width = m3Done ? '100%' : '0%';
   } else {
     if (m2Card) m2Card.classList.add('locked');
     if (m2Badge) {
@@ -394,9 +432,13 @@ function showView(viewName) {
     renderPrincipleContent();
   } else if (viewName === 'modul3') {
     renderModul3Checkpoint();
+    updateProgressUI();
+    updateUnlockUI();
   } else if (viewName === 'modul2') {
     renderSoftwareSteps();
     renderSubmissionStatus();
+  updateProgressUI();
+  updateUnlockUI();
   } else if (viewName === 'kuis') {
     renderQuizContainer();
   }
@@ -761,9 +803,9 @@ function showSoftwarePart(title, desc) {
   const detailBox = document.getElementById('softwarePartDetail');
   if (!detailBox) return;
   detailBox.innerHTML = `
-    <div style="background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(12px); border-left: 4px solid var(--gold); padding: 14px 18px; border-radius: 6px;">
-      <h4 style="margin: 0 0 6px 0; color: #FFFFFF; font-size: 16px;">${title}</h4>
-      <p style="margin: 0; color: rgba(255, 255, 255, 0.78); font-size: 14px; line-height: 1.6;">${desc}</p>
+    <div style="background: var(--white); border: 2px solid var(--black); border-left: 6px solid var(--yellow); padding: 14px 18px; border-radius: 10px; box-shadow: var(--shadow-sm);">
+      <h4 style="margin: 0 0 6px 0; color: var(--black); font-size: 16px;">${title}</h4>
+      <p style="margin: 0; color: var(--black); font-size: 14px; line-height: 1.6;">${desc}</p>
     </div>
   `;
 }
@@ -837,6 +879,10 @@ function checkFlowDiagram() {
 
   const allMatch = Object.keys(correct).every(k => flowSelected[k] === correct[k]);
   if (allMatch) {
+    localStorage.setItem('grafikaku_m3_flow_ok', 'true');
+    if (typeof syncProgressToSupabase === 'function') {
+      syncProgressToSupabase('m3_flow_checked', { is_passed: true });
+    }
     fb.innerHTML = `
       <div style="background: var(--green-light); color: var(--green); padding: 14px 18px; border-radius: 8px; font-weight: 600;">
         &check; Sempurna! Alur komunikasi visual terangkai runtut: Komunikator (Desainer) &rarr; Pesan (Gagasan Visual) &rarr; Media (Karya Cetak/Digital) &rarr; Komunikan (Target Sasaran).
@@ -898,7 +944,7 @@ function checkExerciseAnswer() {
 
   if (!selectedTargetId) {
     fb.innerHTML = `
-      <div style="background: rgba(244, 63, 94, 0.22); border: 1px solid rgba(244, 63, 94, 0.45); color: #FECDD3; padding: 14px 18px; border-radius: 8px; font-weight: 600;">
+      <div style="background: var(--red-light); border: 2px solid var(--black); color: var(--black); padding: 14px 18px; border-radius: 10px; font-weight: 700; box-shadow: var(--shadow-sm);">
         &times; Silakan klik langsung pada salah satu elemen karya di kanvas untuk menandai bagian penekanan (emphasis)!
       </div>
     `;
@@ -906,6 +952,10 @@ function checkExerciseAnswer() {
   }
 
   if (selectedTargetId === 'FOKUS_UTAMA') {
+    localStorage.setItem('grafikaku_latihan_emphasis_ok', 'true');
+    if (typeof syncProgressToSupabase === 'function') {
+      syncProgressToSupabase('latihan_emphasis', { is_passed: true });
+    }
     fb.innerHTML = `
       <div style="background: var(--green-light); border: 1px solid #A7F3D0; color: var(--green); padding: 14px 18px; border-radius: 8px; font-weight: 600;">
         &check; Jawaban Benar! Elemen lingkaran tengah "FOKUS" dibuat berukuran paling besar dan memiliki saturasi warna paling dominan, menjadikannya titik pusat perhatian (emphasis) utama bagi mata pembaca.
@@ -951,6 +1001,10 @@ function checkSopOrder() {
 
   const isMatch = correctSopOrder.every((val, idx) => selectedSopSteps[idx] === val);
   if (isMatch) {
+    localStorage.setItem('grafikaku_latihan_sop_ok', 'true');
+    if (typeof syncProgressToSupabase === 'function') {
+      syncProgressToSupabase('latihan_sop', { is_passed: true });
+    }
     fb.innerHTML = `
       <div style="background: var(--green-light); color: var(--green); padding: 14px 18px; border-radius: 8px; font-weight: 600;">
         &check; Hebat! Urutan SOP telah tepat: Buat Dokumen &rarr; Susun Objek &rarr; Simpan Master .PSD &rarr; Ekspor .PNG.
@@ -1044,7 +1098,7 @@ function renderQuizContainer() {
   container.innerHTML = `
     <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; flex-wrap: wrap; gap: 10px;">
       <span class="subtopic-badge">Soal ${currentQuizIdx + 1} dari ${total}</span>
-      <span style="font-size: 13px; font-weight: 600; color: rgba(255, 255, 255, 0.65);">Progres Kuis: ${pct}%</span>
+      <span style="font-size: 13px; font-weight: 700; color: var(--black);">Progres Kuis: ${pct}%</span>
     </div>
 
     <div class="mod-bar" style="margin-bottom: 24px;">
@@ -1052,15 +1106,15 @@ function renderQuizContainer() {
     </div>
 
     <div style="display: flex; gap: 8px; margin-bottom: 12px; flex-wrap: wrap;">
-      <span class="status-pill open" style="background: var(--blue-light); color: #FFFFFF; font-size: 11.5px;">
+      <span class="status-pill open" style="background: var(--blue-light); color: var(--black); border: 2px solid var(--black); font-size: 11.5px;">
         🎯 ${q.tp || 'TP 1: Prinsip Dasar Desain'}
       </span>
-      <span class="status-pill" style="background: var(--purple-light); color: #FFFFFF; font-size: 11.5px;">
+      <span class="status-pill" style="background: var(--yellow-light); color: var(--black); border: 2px solid var(--black); font-size: 11.5px;">
         🧠 Level Kognitif: ${q.level || 'C2 (Pemahaman)'}
       </span>
     </div>
 
-    <h2 style="color: #FFFFFF; font-size: 20px; line-height: 1.45; margin-bottom: 20px;">
+    <h2 style="color: var(--black); font-size: 20px; line-height: 1.45; margin-bottom: 20px;">
       ${q.question}
     </h2>
 
@@ -1105,7 +1159,7 @@ function nextOrFinishQuiz() {
   if (!selected) {
     if (fb) {
       fb.innerHTML = `
-        <div style="background: rgba(244, 63, 94, 0.22); border: 1px solid rgba(244, 63, 94, 0.45); color: #FECDD3; padding: 12px 16px; border-radius: 8px; font-weight: 600;">
+        <div style="background: var(--red-light); border: 2px solid var(--black); color: var(--black); padding: 12px 16px; border-radius: 10px; font-weight: 700; box-shadow: var(--shadow-sm);">
           &times; Silakan pilih salah satu opsi jawaban terlebih dahulu sebelum melanjutkan!
         </div>
       `;
@@ -1135,9 +1189,22 @@ function renderQuizResultScreen(container) {
   const finalScore = Math.round((correctCount / total) * 100);
   const isPassed = finalScore >= 75;
 
+  localStorage.setItem('grafikaku_kuis_last_score', String(finalScore));
+  localStorage.setItem('grafikaku_kuis_last_correct', String(correctCount));
+  localStorage.setItem('grafikaku_kuis_last_total', String(total));
+
   if (isPassed) {
     localStorage.setItem('grafikaku_modul2_unlocked', 'true');
     updateUnlockUI();
+  }
+
+  if (typeof syncProgressToSupabase === 'function') {
+    syncProgressToSupabase('kuis_akhir_submitted', {
+      score: finalScore,
+      correct: correctCount,
+      total: total,
+      is_passed: isPassed
+    });
   }
 
   container.innerHTML = `
@@ -1146,27 +1213,27 @@ function renderQuizResultScreen(container) {
         ${isPassed ? '&#10003;' : '&#9888;'}
       </div>
 
-      <h2 style="font-size: 26px; color: #FFFFFF; margin-bottom: 8px;">
+      <h2 style="font-size: 26px; color: var(--black); margin-bottom: 8px;">
         ${isPassed ? 'Selamat! Anda Memenuhi Ambang Tuntas' : 'Hasil Evaluasi: Perlu Peningkatan'}
       </h2>
-      <p style="color: rgba(255, 255, 255, 0.65); font-size: 15px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
+      <p style="color: var(--black); font-size: 15px; margin-bottom: 24px; max-width: 600px; margin-left: auto; margin-right: auto;">
         ${isPassed 
           ? 'Anda berhasil memahami konsep 9 Prinsip Desain dan Alur Komunikasi Visual sesuai Capaian Pembelajaran SMK (Skor &ge; 75).' 
           : 'Nilai Anda belum mencapai Kriteria Ketercapaian Tujuan Pembelajaran (KKTP) minimal 75. Silakan tinjau kembali materi Modul 1 dan ulangi kuis.'}
       </p>
 
-      <div style="display: inline-block; background: rgba(255, 255, 255, 0.07); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.20); border-radius: 12px; padding: 20px 48px; margin-bottom: 24px;">
-        <div style="font-size: 48px; font-weight: 800; color: ${isPassed ? 'var(--navy)' : '#DC2626'};">
-          ${finalScore} <span style="font-size: 22px; font-weight: 500; color: rgba(255, 255, 255, 0.65);">/ 100</span>
+      <div style="display: inline-block; background: var(--yellow); border: 2.5px solid var(--black); box-shadow: var(--shadow-sm); border-radius: 12px; padding: 20px 48px; margin-bottom: 24px;">
+        <div style="font-size: 48px; font-weight: 800; color: ${isPassed ? 'var(--black)' : '#DC2626'};">
+          ${finalScore} <span style="font-size: 22px; font-weight: 600; color: var(--black);">/ 100</span>
         </div>
-        <div style="font-size: 14px; font-weight: 600; color: rgba(255, 255, 255, 0.78); margin-top: 4px;">
+        <div style="font-size: 14px; font-weight: 700; color: var(--black); margin-top: 4px;">
           Jawaban Benar: ${correctCount} dari ${total} Soal
         </div>
       </div>
 
       <div>
         ${isPassed ? `
-          <div style="margin-bottom: 20px; font-size: 15px; font-weight: 600; color: #6EE7B7;">
+          <div style="margin-bottom: 20px; font-size: 15px; font-weight: 700; color: #065F46;">
             &#128275; Modul 2 (Tools & Piranti Lunak Grafis) Kini Telah Terbuka Permanen!
           </div>
           <button class="btn-primary" onclick="navigateTo('modul2')" style="padding: 14px 28px; font-size: 16px;">
@@ -1226,8 +1293,8 @@ function renderGlossaryAccordion() {
     card.innerHTML = `
       <div class="gloss-accordion-header" onclick="toggleGlossaryAccordion(${idx})">
         <div>
-          <strong style="color: #FFFFFF; font-size: 15.5px;">${item.term}</strong>
-          <span style="display: inline-block; margin-left: 8px; font-size: 11px; padding: 3px 10px; background: ${scopeBadgeColor}; color: #FFFFFF; border: 1.5px solid var(--black); border-radius: 999px; font-weight: 800;">
+          <strong style="color: var(--black); font-size: 15.5px;">${item.term}</strong>
+          <span style="display: inline-block; margin-left: 8px; font-size: 11px; padding: 3px 10px; background: ${scopeBadgeColor}; color: var(--black); border: 1.5px solid var(--black); border-radius: 999px; font-weight: 800;">
             ${item.moduleScope || 'Modul 1'}
           </span>
           <span style="display: inline-block; margin-left: 4px; font-size: 11px; padding: 3px 8px; background: var(--bg-page); color: var(--text-muted); border-radius: 999px; font-weight: 600;">
@@ -1237,11 +1304,11 @@ function renderGlossaryAccordion() {
         <span class="gloss-chevron" id="glossChevron_${idx}">&#9660;</span>
       </div>
       <div class="gloss-accordion-body" id="glossBody_${idx}">
-        <div style="margin-bottom: 8px; font-size: 12.5px; font-weight: 700; color: #FFFFFF;">
-          📍 Lingkup Pembelajaran: <span style="background: ${scopeBadgeColor}; padding: 2px 8px; border-radius: 6px; border: 1.5px solid var(--black); font-weight: 800;">${item.moduleScope || 'Modul 1: Prinsip Dasar Desain'}</span>
+        <div style="margin-bottom: 8px; font-size: 12.5px; font-weight: 700; color: var(--black);">
+          📍 Lingkup Pembelajaran: <span style="background: ${scopeBadgeColor}; color: var(--black); padding: 2px 8px; border-radius: 6px; border: 1.5px solid var(--black); font-weight: 800;">${item.moduleScope || 'Modul 1: Prinsip Dasar Desain'}</span>
         </div>
         <p style="margin: 0 0 10px 0; color: var(--text-main); line-height: 1.6;">${item.desc}</p>
-        <div style="background: var(--bg-page); border: 1.5px solid var(--black); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+        <div style="background: var(--bg-page); border: 1.5px solid var(--black); border-radius: 8px; padding: 10px 14px; font-size: 13.5px; color: var(--black);">
           <strong>💡 Contoh Penerapan:</strong> ${item.example}
         </div>
       </div>
@@ -1414,13 +1481,13 @@ function handleSubmissionFileSelect(e) {
   if (noteBox) {
     if (isNameOk) {
       noteBox.innerHTML = `
-        <div style="background: var(--green-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: #FFFFFF;">
+        <div style="background: var(--green-light); border: 2px solid var(--black); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--black);">
           ✓ Format berkas valid: ${file.name} (Sesuai panduan SOP M2_Nama_Kelas.png)
         </div>
       `;
     } else {
       noteBox.innerHTML = `
-        <div style="background: var(--yellow-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: #FFFFFF;">
+        <div style="background: var(--yellow-light); border: 2px solid var(--black); border-radius: 8px; padding: 10px 14px; font-size: 13px; font-weight: 700; color: var(--black);">
           ⚠️ Catatan: Nama berkas (${file.name}) sebaiknya diawali 'M2_' sesuai SOP (contoh: M2_Budi_XI-DKV.png).
         </div>
       `;
@@ -1449,13 +1516,36 @@ function updateSubmissionButtonState() {
   }
 }
 
-function submitModul2Work() {
+async function submitModul2Work() {
+  const btn = document.getElementById('btnSubmitWork');
+  if (btn) {
+    btn.disabled = true;
+    btn.textContent = 'Mengirim karya...';
+  }
+
   localStorage.setItem('grafikaku_m2_submitted', 'true');
   if (currentSubmissionFile) {
     localStorage.setItem('grafikaku_m2_filename', currentSubmissionFile.name);
+    if (typeof uploadModul2FileToSupabase === 'function') {
+      await uploadModul2FileToSupabase(currentSubmissionFile);
+    }
+  }
+
+  if (typeof syncProgressToSupabase === 'function') {
+    await syncProgressToSupabase('modul2_submitted', {
+      filename: localStorage.getItem('grafikaku_m2_filename') || '',
+      file_url: localStorage.getItem('grafikaku_m2_file_url') || '',
+      is_passed: true
+    });
   }
 
   renderSubmissionStatus();
+  updateProgressUI();
+  updateUnlockUI();
+  if (btn) {
+    btn.disabled = false;
+    btn.textContent = 'Kirim Tugas';
+  }
 
   alert('🎉 Selamat! Karya tugas praktik Modul 2 berhasil diverifikasi dan tersimpan di sistem pembelajaran GrafikaKu.');
 }
@@ -1468,7 +1558,7 @@ function renderSubmissionStatus() {
   if (badge) {
     if (isSubmitted) {
       badge.innerHTML = `
-        <span class="status-pill open" style="background: var(--green-light); color: #FFFFFF; font-size: 12.5px; border: 1px solid rgba(255, 255, 255, 0.24);">
+        <span class="status-pill open" style="background: var(--green-light); color: var(--black); font-size: 12.5px; border: 2px solid var(--black);">
           ✓ Tugas Praktik Terkumpul: ${fileName}
         </span>
       `;
@@ -1604,6 +1694,8 @@ function renderModul3Checkpoint() {
       if (isPassed) return;
       userM3CheckpointAnswer = opt.key;
       renderModul3Checkpoint();
+    updateProgressUI();
+    updateUnlockUI();
     };
     optContainer.appendChild(optEl);
   });
@@ -1616,7 +1708,7 @@ function checkModul3Checkpoint() {
 
   if (!userM3CheckpointAnswer) {
     fb.innerHTML = `
-      <div style="background: var(--red-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 12px 16px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--red-light); border: 2px solid var(--black); border-radius: 10px; padding: 12px 16px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         &times; Silakan pilih salah satu opsi jawaban terlebih dahulu sebelum memeriksa!
       </div>
     `;
@@ -1625,12 +1717,17 @@ function checkModul3Checkpoint() {
 
   if (userM3CheckpointAnswer === q.answer) {
     localStorage.setItem('grafikaku_m3_checkpoint_passed', 'true');
+    if (typeof syncProgressToSupabase === 'function') {
+      syncProgressToSupabase('m3_checkpoint_passed', { is_passed: true });
+    }
     fb.innerHTML = `
-      <div style="background: var(--green-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 14px 18px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--green-light); border: 2px solid var(--black); border-radius: 10px; padding: 14px 18px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         ✓ ${q.explanation}
       </div>
     `;
     renderModul3Checkpoint();
+    updateProgressUI();
+    updateUnlockUI();
 
     const banner = document.getElementById('modul3CompletionBanner');
     if (banner) {
@@ -1639,7 +1736,7 @@ function checkModul3Checkpoint() {
     }
   } else {
     fb.innerHTML = `
-      <div style="background: var(--red-light); border: 1px solid rgba(255, 255, 255, 0.24); border-radius: 12px; padding: 14px 18px; font-weight: 700; color: #FFFFFF; box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);">
+      <div style="background: var(--red-light); border: 2px solid var(--black); border-radius: 10px; padding: 14px 18px; font-weight: 700; color: var(--black); box-shadow: var(--shadow-sm);">
         &times; Jawaban belum tepat. Cermati kembali studi kasus komunikasi visual dan perbandingan media cetak vs digital di atas!
       </div>
     `;
@@ -1648,6 +1745,8 @@ function checkModul3Checkpoint() {
     userM3CheckpointAnswer = null;
     setTimeout(() => {
       renderModul3Checkpoint();
+    updateProgressUI();
+    updateUnlockUI();
     }, 1400);
   }
 }
@@ -1655,9 +1754,17 @@ function checkModul3Checkpoint() {
 
 // Initial Bootstrap on Page Load
 function initApp() {
+  if (typeof renderStudentIdentityBadge === 'function') {
+    renderStudentIdentityBadge();
+  }
+  if (typeof loadProgressFromSupabase === 'function') {
+    loadProgressFromSupabase();
+  }
   renderSoftwareSteps();
   renderModul3Checkpoint();
   renderSubmissionStatus();
+  updateProgressUI();
+  updateUnlockUI();
   updateProgressUI();
   updateUnlockUI();
   const initView = (location.hash && location.hash.length > 1) ? location.hash.slice(1) : 'beranda';
