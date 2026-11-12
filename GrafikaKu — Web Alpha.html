@@ -21,12 +21,10 @@
       </div>
       <nav class="menu" id="mainNav">
         <a data-view="beranda" class="active" href="#beranda">Beranda</a>
+        <a data-view="cptp" href="#cptp">CP &amp; TP</a>
         <a data-view="modul1" href="#modul1">Modul 1</a>
         <a data-view="modul2" href="#modul2">Modul 2</a>
         <a data-view="modul3" href="#modul3">Modul 3</a>
-        <a data-view="latihan" href="#latihan">Latihan</a>
-        <a data-view="kuis" href="#kuis">Kuis</a>
-        <a data-view="cptp" href="#cptp">CP &amp; TP</a>
         <a onclick="openGlossaryModal()" style="cursor:pointer;">Glosarium</a>
       </nav>
       <button class="hamburger" id="hamburgerBtn" aria-label="Menu Navigasi">&#9776;</button>
@@ -43,10 +41,15 @@
         <p class="hero-desc">
           Selamat datang di GrafikaKu. Pelajari cara menyusun unsur desain, coba alat dasar pada software pilihanmu, lalu buat poster yang menyampaikan pesan dengan jelas. Mulailah dari Modul 1 dan ikuti latihan secara bertahap.
         </p>
-        <button class="btn-primary" onclick="navigateTo('cptp')">
-          <span>Mulai Belajar</span>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
-        </button>
+        <div style="display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;">
+          <button class="btn-primary" onclick="startLearningModul1()" style="font-size: 16px; padding: 0 32px;">
+            <span>Mulai Belajar (Modul 1)</span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+          </button>
+          <button class="btn-secondary" onclick="navigateTo('cptp')">
+            <span>Panduan CP &amp; TP</span>
+          </button>
+        </div>
       </div>
 
       <!-- Bilah Kemajuan Belajar Dinamis (F03 & F14) -->
@@ -62,17 +65,17 @@
           </div>
         </div>
         <div style="text-align: right;">
-          <span id="overallProgressNumber" style="font-size: 26px; font-weight: 800; color: var(--navy); font-family: 'Poppins';">15%</span>
+          <span id="overallProgressNumber" style="font-size: 26px; font-weight: 800; color: var(--black); font-family: 'Poppins';">15%</span>
           <span class="small" style="display:block;">Total Selesai</span>
         </div>
       </div>
 
       <!-- Grid Tiga Modul Pembelajaran -->
-      <h2 style="color: var(--navy); margin-bottom: 16px;">Modul Pembelajaran</h2>
+      <h2 style="color: var(--black); margin-bottom: 16px;">Modul Pembelajaran</h2>
       <div class="module-grid">
         
         <!-- Modul 1 (Terbuka) -->
-        <div class="mod-card unlocked" onclick="navigateTo('modul1')">
+        <div class="mod-card unlocked" onclick="startLearningModul1()">
           <div>
             <div class="mod-card-top">
               <div class="mod-number-badge">1</div>
@@ -189,7 +192,7 @@
         <span class="current">Capaian &amp; Tujuan Pembelajaran</span>
       </div>
 
-      <h1 style="color: var(--navy);">Capaian &amp; Tujuan Pembelajaran</h1>
+      <h1 style="color: var(--black);">Capaian &amp; Tujuan Pembelajaran</h1>
       <p class="small" style="margin-bottom: 24px;">Pelajari kompetensi yang akan dicapai serta ikuti aktivitas pemanasan sebelum membuka Modul 1.</p>
 
       <!-- Capaian Pembelajaran Box -->
@@ -202,7 +205,7 @@
       </div>
 
       <!-- Tiga Kartu TP Berurutan -->
-      <h2 style="color: var(--navy); margin-bottom: 16px;">Tiga Tujuan Pembelajaran (TP)</h2>
+      <h2 style="color: var(--black); margin-bottom: 16px;">Tiga Tujuan Pembelajaran (TP)</h2>
       <div class="tp-container">
         
         <div class="tp-box">
@@ -240,7 +243,7 @@
           </div>
           <span class="warmup-score-badge" id="warmupScoreBadge">Tercocokkan: 0 / 4</span>
         </div>
-        <p class="small" style="color: #92400E; margin-bottom: 14px;">
+        <p class="small" style="color: var(--text-muted); margin-bottom: 14px;">
           Klik satu nama istilah di kolom kiri, lalu klik arti yang paling sesuai di kolom kanan untuk memasangkannya.
         </p>
 
@@ -289,7 +292,7 @@
 
       <!-- Action Navigation Buttons -->
       <div style="display: flex; gap: 14px; flex-wrap: wrap;">
-        <button class="btn-primary" id="btnStartModul1" onclick="navigateTo('modul1')">
+        <button class="btn-primary" id="btnStartModul1" onclick="startLearningModul1()">
           <span>Mulai Modul 1 (Prinsip Dasar Desain)</span>
           <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
         </button>
@@ -305,31 +308,22 @@
       <div class="breadcrumb">
         <a onclick="navigateTo('beranda')">Beranda</a>
         <span class="sep">/</span>
-        <a onclick="navigateTo('modul1')">Modul 1</a>
+        <a onclick="startLearningModul1()">Modul 1</a>
         <span class="sep">/</span>
         <span class="current" id="modBreadcrumbPrinciple">Balance</span>
       </div>
 
       <!-- Principle Selector Tabs (9 Subhalaman F03) -->
-      <div class="principles-nav" id="principlesTabContainer"></div>
+      <div class="principles-nav-container" id="principlesTabContainer"></div>
 
       <!-- Card Materi Interaktif -->
       <div class="materi-card">
         <div class="materi-header-row">
           <div>
             <span class="subtopic-badge" id="subtopicIndicator">Prinsip 2 dari 9</span>
-            <h1 id="principleHeading" style="color: var(--navy); margin-top: 8px; margin-bottom: 4px;">Balance (Keseimbangan)</h1>
+            <h1 id="principleHeading" style="color: var(--black); margin-top: 8px; margin-bottom: 4px;">Balance (Keseimbangan)</h1>
           </div>
-          <div style="display:flex; gap:10px;">
-            <button class="btn-outline-soft" onclick="navigateTo('latihan')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              Latihan Interaktif
-            </button>
-            <button class="btn-outline-soft" onclick="navigateTo('kuis')">
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path><line x1="12" y1="17" x2="12.01" y2="17"></line></svg>
-              Kuis Evaluasi
-            </button>
-          </div>
+          
         </div>
 
         <p id="principleDescription" style="font-size: 16px; line-height: 1.6; margin-bottom: 20px;">
@@ -382,11 +376,63 @@
         </div>
 
         <!-- Analisis Bukti Visual -->
-        <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
-          <h4 style="color: var(--navy); margin-bottom: 6px; font-size: 15px;">Analisis Bukti Visual:</h4>
+        <div style="background: #FAF7F2; border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; margin-bottom: 20px;">
+          <h4 style="color: var(--black); margin-bottom: 6px; font-size: 15px;">Analisis Bukti Visual:</h4>
           <p class="small" id="readingExampleText" style="margin-bottom: 10px;"></p>
           <div style="color: var(--red); font-size: 13px; font-weight: 600;">
             &times; Hindari kekeliruan: <span id="avoidMistakeText" style="color: var(--text-soft); font-weight: normal;"></span>
+          </div>
+        </div>
+
+                <!-- Checkpoint Evaluasi Pemahaman Prinsip (Wajib Lulus untuk Lanjut) -->
+        <div class="principle-checkpoint-card" id="principleCheckpointCard" style="background: var(--bg-surface); border: 2.5px solid var(--black); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-card);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 22px;">✍️</span>
+              <h4 style="margin: 0; font-size: 17px; color: var(--black);" id="checkpointTitle">Evaluasi Pemahaman Prinsip</h4>
+            </div>
+            <span id="checkpointStatusBadge" class="status-pill locked" style="font-size: 11.5px;">
+              🔒 Jawab Benar untuk Membuka Prinsip Berikutnya
+            </span>
+          </div>
+
+          <p style="font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 16px; line-height: 1.45;" id="checkpointQuestionText">
+            Pertanyaan evaluasi prinsip akan muncul di sini...
+          </p>
+
+          <div class="checkpoint-options-list" id="checkpointOptionsContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <!-- Options rendered dynamically -->
+          </div>
+
+          <div id="checkpointFeedback" style="margin-bottom: 14px;"></div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn-primary" id="btnCheckCheckpoint" onclick="checkPrincipleCheckpoint()" style="padding: 0 22px; height: 42px; font-size: 14px;">
+              <span>Periksa Jawaban Evaluasi</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Banner Sukses Selesai 9 Prinsip Modul 1 (CTA ke Latihan F09) -->
+        <div id="modul1CompletionBanner" style="display: none; background: #FFD166; border: 3px solid var(--black); border-radius: 24px; padding: 26px; margin-bottom: 24px; box-shadow: 0 12px 36px rgba(139, 92, 246, 0.35); animation: bounceIn 0.4s ease;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="max-width: 620px;">
+              <span style="display: inline-block; background: var(--black); color: #FFFFFF; border: 1px solid rgba(255,255,255,0.28); font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                🎉 Target TP 1 Tercapai!
+              </span>
+              <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: var(--black);">
+                Selamat! Kamu Berhasil Menyelesaikan 9 Prinsip Dasar Desain
+              </h3>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--black); font-weight: 600;">
+                Semua evaluasi pemahaman (Unity s.d. Space) telah lulus! Sekarang saatnya menguji kemampuanmu mengidentifikasi prinsip pada karya nyata lewat <strong>Latihan Interaktif (F09)</strong>.
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-self: center;">
+              <button class="btn-primary" onclick="navigateTo('latihan')" style="background: var(--pink); border-color: var(--black); color: var(--black); font-size: 15px; padding: 0 24px; height: 48px; box-shadow: 3px 3px 0 0 var(--black); display: flex; align-items: center; gap: 8px;">
+                <span>Lanjut ke Latihan Interaktif</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -409,7 +455,7 @@
     </section>
 
 
-    <!-- SECTION 4: MODUL 2 (F05, F06, F07, F11) -->
+        <!-- SECTION 4: MODUL 2 (F05, F06, F07, F11) -->
     <section id="modul2" class="view-section">
       <div class="breadcrumb">
         <a onclick="navigateTo('beranda')">Beranda</a>
@@ -421,76 +467,153 @@
         <div class="materi-header-row">
           <div>
             <span class="subtopic-badge">TP 2 &bull; Software &amp; SOP</span>
-            <h1 style="color: var(--navy); margin-top: 8px;">Pengenalan Software &amp; Prosedur SOP</h1>
+            <h1 style="color: var(--black); margin-top: 8px; font-weight: 800; font-size: 28px;">Pengenalan Software &amp; Prosedur SOP</h1>
           </div>
           <div>
             <button class="btn-primary" onclick="downloadFileLatihan()">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
-              Unduh File Latihan (AS10)
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+              <span>Unduh File Latihan (AS10)</span>
             </button>
           </div>
         </div>
 
-        <p class="small" style="line-height: 1.6; margin-bottom: 20px;">
+        <p class="small" style="line-height: 1.65; margin-bottom: 24px; font-size: 15px; color: var(--text-muted);">
           Pelajari area kerja software desain grafis (Photoshop, Canva, atau CorelDRAW). Pilih satu software utama yang tersedia di lab komputer sekolah Anda.
         </p>
 
         <!-- F05: Bagian Antarmuka Software Berlabel Interaktif -->
-        <h3 style="color: var(--navy); margin-bottom: 12px;">1. Eksplorasi Antarmuka Kerja Software (F05)</h3>
-        <p class="small">Klik salah satu bagian panel di bawah untuk melihat nama komponen dan fungsi kerjanya:</p>
+        <h3 style="color: var(--black); margin-bottom: 10px; font-weight: 800; font-size: 19px;">1. Eksplorasi Antarmuka Kerja Software (F05)</h3>
+        <p class="small" style="margin-bottom: 14px; color: var(--text-muted);">Klik salah satu bagian panel di bawah untuk melihat nama komponen dan fungsi kerjanya:</p>
         
-        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin-bottom: 24px;">
+        <div class="m2-interface-grid">
           <div class="select-artwork-box" onclick="showSoftwarePart('Toolbox / Alat Pemilihan', 'Memuat Move tool, Selection tool, Type tool, dan Shape tool untuk membuat serta memilih objek.')">
-            <strong style="color:var(--navy);">Toolbox (Alat Desain)</strong>
-            <p class="small" style="margin:4px 0 0;">Klik untuk periksa fungsi</p>
+            <strong style="color:var(--black); font-size: 15px;">Toolbox (Alat Desain)</strong>
+            <p class="small" style="margin:6px 0 0; color: var(--text-muted);">Klik untuk periksa fungsi</p>
           </div>
           <div class="select-artwork-box" onclick="showSoftwarePart('Kanvas Kerja Utama', 'Bidang gambar tempat mengatur objek poster berukuran 1080 x 1350 px dengan latar putih.')">
-            <strong style="color:var(--navy);">Kanvas (Artboard)</strong>
-            <p class="small" style="margin:4px 0 0;">Klik untuk periksa fungsi</p>
+            <strong style="color:var(--black); font-size: 15px;">Kanvas (Artboard)</strong>
+            <p class="small" style="margin:6px 0 0; color: var(--text-muted);">Klik untuk periksa fungsi</p>
           </div>
           <div class="select-artwork-box" onclick="showSoftwarePart('Panel Layer & Properti', 'Mengelola urutan tumpukan objek, teks, shape tumbler, serta pengaturan warna fill & outline.')">
-            <strong style="color:var(--navy);">Panel Layer &amp; Objek</strong>
-            <p class="small" style="margin:4px 0 0;">Klik untuk periksa fungsi</p>
+            <strong style="color:var(--black); font-size: 15px;">Panel Layer &amp; Objek</strong>
+            <p class="small" style="margin:6px 0 0; color: var(--text-muted);">Klik untuk periksa fungsi</p>
           </div>
         </div>
-        <div id="softwarePartDetail" style="margin-bottom: 24px;"></div>
+        <div id="softwarePartDetail" style="margin-bottom: 28px;"></div>
 
         <!-- F07: Video Panduan Tertanam (Embedded) -->
-        <h3 style="color: var(--navy); margin-bottom: 12px;">2. Video Panduan Praktik Tertanam (F07)</h3>
-        <div style="background:#0F172A; border-radius:10px; padding:16px; text-align:center; color:#fff; margin-bottom:24px;">
-          <div style="max-width: 640px; margin: 0 auto; aspect-ratio: 16/9; background:#1E293B; border-radius:8px; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
+        <h3 style="color: var(--black); margin-bottom: 12px; font-weight: 800; font-size: 19px;">2. Video Panduan Praktik Tertanam (F07)</h3>
+        <div class="m2-video-frame">
+          <div style="max-width: 640px; margin: 0 auto; aspect-ratio: 16/9; background:#1E293B; border-radius:10px; border: 2px solid #334155; display:flex; flex-direction:column; align-items:center; justify-content:center; position:relative; overflow:hidden;">
             <video id="tutorialVideo" controls style="width:100%; height:100%; object-fit:cover;">
               <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
               Peramban tidak mendukung pemutaran video.
             </video>
           </div>
-          <p class="small" style="color:#94A3B8; margin-top:10px; margin-bottom:0;">
+          <p class="small" style="color:#E2E8F0; margin-top:12px; margin-bottom:0; font-weight: 600;">
             Video tutorial SOP pembuatan dokumen 1080 &times; 1350 px, penataan shape tumbler, dan ekspor PNG.
           </p>
         </div>
 
         <!-- F06: Panduan Software Bertahap Sesuai SOP -->
-        <h3 style="color: var(--navy); margin-bottom: 12px;">3. Panduan Langkah Bertahap SOP (F06)</h3>
-        <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:24px;">
-          <ol class="steps-list" style="margin-bottom:0;">
-            <li><strong>Langkah 1:</strong> Buka software, buat dokumen baru 1080 &times; 1350 piksel, orientasi potret, warna RGB.</li>
-            <li><strong>Langkah 2:</strong> Simpan awal berkas kerja master sebagai <code>M2_Nama_Kelas.psd</code> (atau .cdr / proyek Canva).</li>
-            <li><strong>Langkah 3:</strong> Buat objek tumbler dari shape persegi panjang (badan, bahu, tutup) atau tempatkan aset AS10.</li>
-            <li><strong>Langkah 4:</strong> Gunakan Type Tool untuk membuat teks judul, pendukung, dan ajakan pada layer terpisah.</li>
-            <li><strong>Langkah 5:</strong> Cek hierarki dan margin. Simpan master PSD/CDR.</li>
-            <li><strong>Langkah 6 (Simpan &amp; Ekspor):</strong> Pilih menu <em>File &gt; Export &gt; Export As PNG</em>, pastikan ukuran 1080 &times; 1350 px, lalu simpan sebagai <code>M2_Nama_Kelas.png</code>.</li>
-          </ol>
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 12px;">
+          <h3 style="color: var(--black); margin: 0; font-size: 19px; font-weight: 800;">3. Panduan Langkah Bertahap SOP (F06)</h3>
+          <!-- Software Switcher -->
+          <div class="toggle-btn-group" id="softwareToggleGroup">
+            <button class="toggle-btn active" id="btnSoftwarePs" onclick="selectSoftwareView('photoshop')">Adobe Photoshop</button>
+            <button class="toggle-btn" id="btnSoftwareCdr" onclick="selectSoftwareView('coreldraw')">CorelDRAW</button>
+            <button class="toggle-btn" id="btnSoftwareCanva" onclick="selectSoftwareView('canva')">Canva</button>
+          </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-          <button class="btn-secondary" onclick="navigateTo('beranda')">Kembali ke Beranda</button>
+        <div class="m2-steps-card">
+          <div id="softwareStepsContent">
+            <!-- Rendered dynamically based on selected software -->
+          </div>
+        </div>
+
+        <!-- Mini Evaluasi Cepat Alur Prosedur SOP (Tautan Langsung ke Latihan F09) -->
+        <div class="m2-sop-banner">
+          <div>
+            <h4 style="margin: 0 0 6px; color: var(--black); font-size: 16.5px; font-weight: 800;">🧪 Uji Pemahaman Alur SOP Kerja</h4>
+            <p style="margin: 0; font-size: 13.5px; color: var(--black); font-weight: 600;">
+              Pastikan kamu sudah hafal urutan baku kerja dari buka dokumen hingga ekspor sebelum mengumpulkan karya!
+            </p>
+          </div>
+          <button class="btn-primary" onclick="navigateTo('latihan')" style="font-size: 14px; padding: 0 22px; height: 44px; background: var(--yellow); color: var(--black);">
+            <span>Coba Latihan Urutan SOP &rarr;</span>
+          </button>
+        </div>
+
+        <!-- 4. Area Pengumpulan & Verifikasi Hasil Karya Praktik Mandiri Siswa -->
+        <h3 style="color: var(--black); margin-bottom: 12px; font-size: 19px; font-weight: 800;">
+          4. Pengumpulan &amp; Verifikasi Hasil Karya Praktik (TP 2)
+        </h3>
+        <div class="m2-submission-card">
+          <p style="font-size: 14px; color: var(--black); font-weight: 600; margin-bottom: 18px; line-height: 1.55;">
+            Unggah file hasil ekspor poster tumbler (.PNG / .JPG) yang telah kamu buat di software desain untuk diverifikasi dan dinilai sesuai kriteria SOP:
+          </p>
+
+          <div style="margin-bottom: 20px;" class="submission-grid">
+            <!-- Upload Box & Preview -->
+            <div>
+              <label style="display: block; font-weight: 800; font-size: 13.5px; margin-bottom: 8px; color: var(--black);">
+                Pilih Berkas Ekspor (.PNG / .JPG):
+              </label>
+              <input type="file" id="submissionFileInput" class="m2-file-input" accept="image/png, image/jpeg" onchange="handleSubmissionFileSelect(event)">
+
+              <!-- Image Preview Container -->
+              <div id="submissionPreviewBox" class="m2-preview-box">
+                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#64748B" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                <span style="font-size: 13px; color: var(--text-muted); font-weight: 700; margin-top: 8px;">Pratinjau karya akan tampil di sini</span>
+              </div>
+            </div>
+
+            <!-- Self-Assessment Rubric Checklist -->
+            <div>
+              <label style="display: block; font-weight: 800; font-size: 13.5px; margin-bottom: 8px; color: var(--black);">
+                Rubrik Penilaian Mandiri Siswa (Self-Checklist SOP):
+              </label>
+              <div class="m2-checklist-box">
+                <label class="m2-checklist-item">
+                  <input type="checkbox" id="chkSize" onchange="updateSubmissionButtonState()">
+                  <span>Ukuran kanvas tepat 1080 &times; 1350 piksel (RGB)</span>
+                </label>
+                <label class="m2-checklist-item">
+                  <input type="checkbox" id="chkMaster" onchange="updateSubmissionButtonState()">
+                  <span>Berkas kerja master (.PSD / .CDR) sudah tersimpan aman</span>
+                </label>
+                <label class="m2-checklist-item">
+                  <input type="checkbox" id="chkTumbler" onchange="updateSubmissionButtonState()">
+                  <span>Objek shape tumbler tersusun rapi pada layer terpisah</span>
+                </label>
+                <label class="m2-checklist-item">
+                  <input type="checkbox" id="chkName" onchange="updateSubmissionButtonState()">
+                  <span>Format penamaan berkas sesuai SOP (M2_Nama_Kelas)</span>
+                </label>
+              </div>
+
+              <div id="submissionValidationNote" style="margin-top: 14px;"></div>
+            </div>
+          </div>
+
+          <div style="display: flex; justify-content: flex-end; align-items: center; gap: 12px; border-top: 2px dashed var(--black); padding-top: 18px; flex-wrap: wrap;">
+            <div id="submissionStatusBadge" style="margin-right: auto; font-size: 13px; font-weight: 700;"></div>
+            <button class="btn-primary" id="btnSubmitWork" onclick="submitModul2Work()" style="height: 46px; padding: 0 24px; font-size: 14.5px; background: var(--green); color: var(--black);" disabled>
+              <span>Kumpulkan Tugas Praktik &rarr;</span>
+            </button>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top: 12px; border-top: 2px solid var(--black);">
+          <button class="btn-secondary" onclick="navigateTo('beranda')">&larr; Kembali ke Beranda</button>
           <button class="btn-primary" onclick="navigateTo('modul3')">Lanjut ke Modul 3: Komunikasi Visual &rarr;</button>
         </div>
       </div>
     </section>
 
 
-    <!-- SECTION 5: MODUL 3 (F08 - Komunikasi Visual) -->
+            <!-- SECTION 5: MODUL 3 (F08 - Komunikasi Visual) -->
     <section id="modul3" class="view-section">
       <div class="breadcrumb">
         <a onclick="navigateTo('beranda')">Beranda</a>
@@ -500,52 +623,227 @@
 
       <div class="materi-card">
         <span class="subtopic-badge">TP 3 &bull; Komunikasi Grafis</span>
-        <h1 style="color: var(--navy); margin-top: 8px;">Komunikasi Visual &amp; Analisis Studi Kasus</h1>
-        <p class="small" style="line-height: 1.6; margin-bottom: 24px;">
-          Komunikasi visual menyampaikan pesan melalui perpaduan teks dan gambar kepada audiens yang tepat melalui saluran media yang efektif.
+        <h1 style="color: var(--black); margin-top: 8px; font-weight: 800; font-size: 28px;">Komunikasi Visual &amp; Analisis Studi Kasus</h1>
+        <p class="small" style="line-height: 1.65; margin-bottom: 28px; font-size: 15px; color: var(--text-muted);">
+          Komunikasi visual adalah seni dan keterampilan menyampaikan pesan gagasan melalui perpaduan teks, ilustrasi, dan tata letak secara tepat sasaran kepada audiens melalui saluran media yang efektif.
         </p>
 
-        <!-- F08: Diagram Alur Komunikasi Interaktif (Seret / Pasangkan) -->
-        <h3 style="color: var(--navy); margin-bottom: 12px;">Bagan Alur Komunikasi Grafis (F08)</h3>
-        <p class="small">Lengkapi bagan alur komunikasi di bawah ini dengan mengklik label yang tersedia:</p>
+        <!-- Bagian 1: F08 Bagan Alur Komunikasi Interaktif -->
+        <div class="m3-section-block">
+          <h3 class="m3-section-title">1. Bagan Alur Proses Komunikasi Grafis (F08)</h3>
+          <p class="small" style="margin-bottom: 14px; color: var(--text-muted);">
+            Lengkapi bagan alur komunikasi grafis berikut dengan mengklik tombol label secara berurutan:
+          </p>
 
-        <div style="display:flex; gap:10px; margin-bottom:16px; flex-wrap:wrap;">
-          <span style="font-weight:600; font-size:14px; color:var(--text-soft); align-self:center;">Pilih label:</span>
-          <button class="toggle-btn active" onclick="assignFlowLabel('Komunikator')">1. Komunikator</button>
-          <button class="toggle-btn active" onclick="assignFlowLabel('Pesan')">2. Pesan</button>
-          <button class="toggle-btn active" onclick="assignFlowLabel('Media')">3. Media</button>
-          <button class="toggle-btn active" onclick="assignFlowLabel('Komunikan')">4. Komunikan</button>
+          <div style="display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; align-items:center;">
+            <span style="font-weight:800; font-size:13.5px; color:var(--black);">Pilih label:</span>
+            <button class="toggle-btn active" onclick="assignFlowLabel('Komunikator')">1. Komunikator</button>
+            <button class="toggle-btn active" onclick="assignFlowLabel('Pesan')">2. Pesan</button>
+            <button class="toggle-btn active" onclick="assignFlowLabel('Media')">3. Media</button>
+            <button class="toggle-btn active" onclick="assignFlowLabel('Komunikan')">4. Komunikan</button>
+          </div>
+
+          <div class="m3-flow-grid">
+            <div class="m3-flow-box box-blue">
+              <div class="m3-flow-label">Tahap 1 &bull; Pengirim</div>
+              <strong id="slot1" class="m3-flow-slot">[Kotak 1]</strong>
+            </div>
+            <div class="m3-flow-box box-yellow">
+              <div class="m3-flow-label">Tahap 2 &bull; Gagasan</div>
+              <strong id="slot2" class="m3-flow-slot">[Kotak 2]</strong>
+            </div>
+            <div class="m3-flow-box box-green">
+              <div class="m3-flow-label">Tahap 3 &bull; Saluran</div>
+              <strong id="slot3" class="m3-flow-slot">[Kotak 3]</strong>
+            </div>
+            <div class="m3-flow-box box-pink">
+              <div class="m3-flow-label">Tahap 4 &bull; Sasaran</div>
+              <strong id="slot4" class="m3-flow-slot">[Kotak 4]</strong>
+            </div>
+          </div>
+
+          <div>
+            <button class="btn-primary" onclick="checkFlowDiagram()" style="margin-right:8px;">Periksa Alur Bagan</button>
+            <button class="btn-secondary" onclick="resetFlowDiagram()">Reset Bagan</button>
+            <div id="flowFeedback" style="margin-top:14px;"></div>
+          </div>
         </div>
 
-        <!-- Visual Bagan 4 Kotak -->
-        <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; margin-bottom:20px; text-align:center;">
-          <div style="background:#EEF2FF; border:2px dashed #818CF8; border-radius:8px; padding:16px;">
-            <div class="small" style="color:var(--text-soft);">Pengirim</div>
-            <strong id="slot1" style="color:var(--indigo); display:block; margin-top:4px;">[Kotak 1]</strong>
-          </div>
-          <div style="background:#FFFBEB; border:2px dashed #FCD34D; border-radius:8px; padding:16px;">
-            <div class="small" style="color:var(--text-soft);">Isi Himbauan</div>
-            <strong id="slot2" style="color:#B45309; display:block; margin-top:4px;">[Kotak 2]</strong>
-          </div>
-          <div style="background:#ECFDF5; border:2px dashed #6EE7B7; border-radius:8px; padding:16px;">
-            <div class="small" style="color:var(--text-soft);">Saluran</div>
-            <strong id="slot3" style="color:var(--green); display:block; margin-top:4px;">[Kotak 3]</strong>
-          </div>
-          <div style="background:#F1F5F9; border:2px dashed #94A3B8; border-radius:8px; padding:16px;">
-            <div class="small" style="color:var(--text-soft);">Sasaran</div>
-            <strong id="slot4" style="color:var(--navy); display:block; margin-top:4px;">[Kotak 4]</strong>
+        <!-- Bagian 2: Tabel Perbandingan Media Cetak vs Media Digital -->
+        <div class="m3-section-block">
+          <h3 class="m3-section-title">2. Perbandingan Saluran Media Grafis (Cetak vs Digital)</h3>
+          <p class="small" style="margin-bottom: 14px; color: var(--text-muted);">
+            Seorang desainer harus memahami spesifikasi teknis dan perilaku pembaca pada media cetak versus media digital:
+          </p>
+
+          <div class="m3-table-wrap">
+            <table class="m3-table">
+              <thead>
+                <tr>
+                  <th>Parameter Desain</th>
+                  <th>Media Cetak (Poster Mading / Brosur)</th>
+                  <th>Media Digital (Feed Instagram / Status)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Mode Warna</strong></td>
+                  <td><strong>CMYK</strong> (Cyan, Magenta, Yellow, Key/Black)</td>
+                  <td><strong>RGB</strong> (Red, Green, Blue) layar emisi cahaya</td>
+                </tr>
+                <tr>
+                  <td><strong>Standar Resolusi</strong></td>
+                  <td><strong>300 DPI</strong> (Dots Per Inch) tajam saat dicetak</td>
+                  <td><strong>72 – 150 PPI</strong> (Pixels Per Inch), ringan &amp; cepat dimuat</td>
+                </tr>
+                <tr>
+                  <td><strong>Format Berkas Akhir</strong></td>
+                  <td>PDF Print, TIFF, EPS resolusi tinggi</td>
+                  <td>PNG (lossless tajam), JPG/WEBP</td>
+                </tr>
+                <tr>
+                  <td><strong>Perilaku Pembaca</strong></td>
+                  <td>Membaca detail dari jarak dekat, waktu baca lebih panjang</td>
+                  <td>Memindai cepat (aturan 3 detik), butuh kontras kuat &amp; teks ringkas</td>
+                </tr>
+              </tbody>
+            </table>
           </div>
         </div>
 
-        <div style="margin-bottom:24px;">
-          <button class="btn-primary" onclick="checkFlowDiagram()">Periksa Alur Bagan</button>
-          <button class="btn-secondary" onclick="resetFlowDiagram()" style="margin-left:8px;">Reset Bagan</button>
-          <div id="flowFeedback" style="margin-top:14px;"></div>
+        <!-- Bagian 3: Analisis Studi Kasus -->
+        <div class="m3-section-block">
+          <h3 class="m3-section-title">3. Analisis Studi Kasus: Kampanye Poster Tumbler Sekolah</h3>
+          <p class="small" style="margin-bottom: 14px; color: var(--text-muted);">
+            Pelajari bagaimana 4 pilar komunikasi diterapkan secara nyata pada perancangan karya poster SMK:
+          </p>
+
+          <div class="m3-case-card">
+            <div style="display: flex; gap: 12px; align-items: center; margin-bottom: 18px; flex-wrap: wrap;">
+              <span style="background: var(--pink); color: var(--black); font-size: 12px; font-weight: 800; padding: 5px 12px; border-radius: 999px; border: 2px solid var(--black); box-shadow: 2px 2px 0 0 var(--black);">
+                KASUS NYATA SMK
+              </span>
+              <h4 style="margin: 0; font-size: 17px; font-weight: 800; color: var(--black);">
+                Poster Adiwiyata: &ldquo;Bawa Tumblermu, Bebaskan Sekolah dari Sampah Plastik&rdquo;
+              </h4>
+            </div>
+
+            <div class="m3-case-grid">
+              <div class="m3-case-item" style="background: var(--blue-light);">
+                <strong style="color: var(--black); font-size: 14px;">1. Komunikator (Pengirim)</strong>
+                <p class="small" style="margin: 6px 0 0; line-height: 1.55; color: var(--black);">
+                  Tim Adiwiyata dan OSIS SMK yang memiliki tujuan sosial meningkatkan kesadaran lingkungan warga sekolah.
+                </p>
+              </div>
+              <div class="m3-case-item" style="background: var(--yellow-light);">
+                <strong style="color: var(--black); font-size: 14px;">2. Pesan Visual (Gagasan Utama)</strong>
+                <p class="small" style="margin: 6px 0 0; line-height: 1.55; color: var(--black);">
+                  Himbauan persuasif membawa botol minum isi ulang (tumbler) dengan ilustrasi botol menarik dan teks singkat.
+                </p>
+              </div>
+              <div class="m3-case-item" style="background: var(--green-light);">
+                <strong style="color: var(--black); font-size: 14px;">3. Saluran Media</strong>
+                <p class="small" style="margin: 6px 0 0; line-height: 1.55; color: var(--black);">
+                  Feed Instagram resmi sekolah (1080 &times; 1350 px, RGB) dipadukan dengan poster cetak A3 di area kantin.
+                </p>
+              </div>
+              <div class="m3-case-item" style="background: var(--pink-light);">
+                <strong style="color: var(--black); font-size: 14px;">4. Komunikan (Audiens Sasaran)</strong>
+                <p class="small" style="margin: 6px 0 0; line-height: 1.55; color: var(--black);">
+                  Peserta didik SMK usia 15–18 tahun yang menyukai visual modern, warna cerah, dan gaya bahasa santun kekinian.
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
 
-        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+        <!-- Bagian 4: Proyek Mini & Rubrik Evaluasi Komunikasi Visual -->
+        <div class="m3-section-block">
+          <h3 class="m3-section-title">4. Proyek Mini &amp; Rubrik Evaluasi Komunikasi Visual</h3>
+          <p class="small" style="margin-bottom: 14px; color: var(--text-muted);">
+            Gunakan panduan rubrik di bawah ini untuk menilai apakah karya desain visualmu sudah memenuhi kaidah komunikasi grafis:
+          </p>
+
+          <div class="m3-rubric-card">
+            <div class="m3-rubric-item">
+              <span class="m3-rubric-num" style="background: var(--yellow); color: var(--black);">1</span>
+              <div>
+                <strong style="font-size: 14.5px; color: var(--black);">Kejelasan Pesan (Message Clarity):</strong>
+                <p class="small" style="margin: 4px 0 0; color: var(--text-muted);">Apakah dalam pandangan 3 detik pertama, audiens langsung mengerti ajakan utama poster tanpa kebingungan?</p>
+              </div>
+            </div>
+            <div class="m3-rubric-item">
+              <span class="m3-rubric-num" style="background: var(--pink); color: var(--black);">2</span>
+              <div>
+                <strong style="font-size: 14.5px; color: var(--black);">Kesesuaian Karakter Audiens (Audience Alignment):</strong>
+                <p class="small" style="margin: 4px 0 0; color: var(--text-muted);">Apakah jenis huruf (font), warna latar, dan ilustrasi relevan dengan usia dan kebiasaan sasaran pembaca?</p>
+              </div>
+            </div>
+            <div class="m3-rubric-item">
+              <span class="m3-rubric-num" style="background: var(--green); color: var(--black);">3</span>
+              <div>
+                <strong style="font-size: 14.5px; color: var(--black);">Hierarki Visual &amp; Titik Fokus (Emphasis):</strong>
+                <p class="small" style="margin: 4px 0 0; color: var(--text-muted);">Apakah judul paling dominan dibanding informasi detail, dan apakah tata letak memiliki cukup ruang napas (space)?</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bagian 5: Checkpoint Evaluasi Studi Kasus TP 3 -->
+        <div class="principle-checkpoint-card" id="modul3CheckpointCard" style="background: var(--bg-surface); border: 2.5px solid var(--black); border-radius: 18px; padding: 24px; margin-bottom: 24px; box-shadow: var(--shadow-card);">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; flex-wrap: wrap; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <span style="font-size: 22px;">🎯</span>
+              <h4 style="margin: 0; font-size: 17px; color: var(--black); font-weight: 800;">Evaluasi Pemahaman Studi Kasus TP 3</h4>
+            </div>
+            <span id="m3CheckpointStatusBadge" class="status-pill locked" style="font-size: 11.5px;">
+              🔒 Jawab Benar untuk Menyelesaikan Modul 3
+            </span>
+          </div>
+
+          <p style="font-size: 15px; font-weight: 700; color: var(--black); margin-bottom: 16px; line-height: 1.45;" id="m3CheckpointQuestionText">
+            Memuat pertanyaan studi kasus komunikasi visual...
+          </p>
+
+          <div class="checkpoint-options-list" id="m3CheckpointOptionsContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;">
+            <!-- Options rendered dynamically -->
+          </div>
+
+          <div id="m3CheckpointFeedback" style="margin-bottom: 14px;"></div>
+
+          <div style="display: flex; justify-content: flex-end; gap: 10px;">
+            <button class="btn-primary" id="btnCheckM3Checkpoint" onclick="checkModul3Checkpoint()" style="padding: 0 22px; height: 42px; font-size: 14px;">
+              <span>Periksa Jawaban Evaluasi</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Banner Sukses Selesai Modul 3 (CTA ke Kuis Akhir) -->
+        <div id="modul3CompletionBanner" style="display: none; background: #FFD166; border: 3px solid var(--black); border-radius: 20px; padding: 26px; margin-bottom: 24px; box-shadow: 5px 5px 0 0 var(--black); animation: bounceIn 0.4s ease;">
+          <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 16px;">
+            <div style="max-width: 620px;">
+              <span style="display: inline-block; background: var(--black); color: #FFFFFF; font-size: 12px; font-weight: 800; padding: 4px 12px; border-radius: 999px; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
+                🏆 Seluruh 3 Modul Telah Dipelajari!
+              </span>
+              <h3 style="margin: 0 0 8px 0; font-size: 20px; font-weight: 800; color: var(--black);">
+                Luar Biasa! Pemahaman Teori &amp; Praktik Komunikasi Visual Telah Tuntas
+              </h3>
+              <p style="margin: 0; font-size: 14.5px; line-height: 1.55; color: var(--black); font-weight: 600;">
+                Kini saatnya membuktikan seluruh kompetensimu (TP 1, TP 2, TP 3) pada <strong>Kuis Akhir Uji Kompetensi (10 Soal Acak)</strong> untuk membuka sertifikasi kelulusan modul.
+              </p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px; align-self: center;">
+              <button class="btn-primary" onclick="navigateTo('kuis')" style="background: var(--pink); border-color: var(--black); color: var(--black); font-size: 15px; padding: 0 24px; height: 48px; box-shadow: 3px 3px 0 0 var(--black); display: flex; align-items: center; gap: 8px;">
+                <span>Mulai Kuis Evaluasi Akhir</span>
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; padding-top: 12px; border-top: 2px solid var(--black);">
           <button class="btn-secondary" onclick="navigateTo('modul2')">&larr; Kembali ke Modul 2</button>
-          <button class="btn-primary" onclick="navigateTo('latihan')">Lanjut ke Latihan Interaktif &rarr;</button>
+          <button class="btn-primary" onclick="navigateTo('latihan')">Buka Latihan Interaktif &rarr;</button>
         </div>
       </div>
     </section>
@@ -556,7 +854,7 @@
       <div class="breadcrumb">
         <a onclick="navigateTo('beranda')">Beranda</a>
         <span class="sep">/</span>
-        <a onclick="navigateTo('modul1')">Modul 1</a>
+        <a onclick="startLearningModul1()">Modul 1</a>
         <span class="sep">/</span>
         <span class="current">Latihan Interaktif</span>
       </div>
@@ -564,7 +862,7 @@
       <!-- Latihan 1: Menandai Area Emphasis (F09) -->
       <div class="exercise-card">
         <span class="subtopic-badge">Aktivitas Latihan 1</span>
-        <h1 style="color: var(--navy); margin-top: 8px;">Tandai Bagian Penekanan (Emphasis)</h1>
+        <h1 style="color: var(--black); margin-top: 8px;">Tandai Bagian Penekanan (Emphasis)</h1>
         <p class="small" style="margin-bottom: 18px;">
           Amati contoh karya grafis di bawah ini. <strong>Klik langsung pada area gambar</strong> yang menjadi pusat perhatian (emphasis) utama untuk menandainya.
         </p>
@@ -603,7 +901,7 @@
       <!-- Latihan 2: Mengurutkan Langkah SOP (F09 Bagian 2) -->
       <div class="exercise-card">
         <span class="subtopic-badge">Aktivitas Latihan 2</span>
-        <h2 style="color: var(--navy); margin-top: 8px;">Mengurutkan Prosedur SOP Software</h2>
+        <h2 style="color: var(--black); margin-top: 8px;">Mengurutkan Prosedur SOP Software</h2>
         <p class="small" style="margin-bottom: 18px;">
           Klik urutan langkah di bawah ini untuk menyusun alur kerja SOP yang benar dari awal hingga ekspor:
         </p>
@@ -615,7 +913,7 @@
           <div class="warmup-card" onclick="selectSopStep(this, 'Susun Objek Tumbler dan Teks')">Langkah: Buat shape tumbler dan teks judul serta ajakan</div>
         </div>
 
-        <div style="background:#F8FAFC; border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
+        <div style="background: #FAF7F2; border:1px solid var(--border); border-radius:8px; padding:14px; margin-bottom:14px;">
           <span style="font-weight:600; font-size:14px; color:var(--navy);">Urutan Pilihan Anda:</span>
           <div id="sopSelectedOrder" style="margin-top:8px; font-size:14px; color:var(--indigo); min-height:24px;">(Belum ada langkah dipilih)</div>
         </div>
@@ -625,7 +923,7 @@
         <div id="sopFeedback" style="margin-top:14px;"></div>
 
         <div style="margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border); display: flex; justify-content: space-between;">
-          <button class="btn-secondary" onclick="navigateTo('modul1')">Kembali ke Modul 1</button>
+          <button class="btn-secondary" onclick="startLearningModul1()">Kembali ke Modul 1</button>
           <button class="btn-primary" onclick="navigateTo('kuis')">Lanjut ke Kuis Evaluasi &rarr;</button>
         </div>
       </div>
@@ -637,7 +935,7 @@
       <div class="breadcrumb">
         <a onclick="navigateTo('beranda')">Beranda</a>
         <span class="sep">/</span>
-        <a onclick="navigateTo('modul1')">Modul 1</a>
+        <a onclick="startLearningModul1()">Modul 1</a>
         <span class="sep">/</span>
         <span class="current">Kuis Evaluasi</span>
       </div>
@@ -649,6 +947,41 @@
 
   </main>
 
+  
+  <!-- MODAL: Pengantar Pembelajaran Modul 1 (Catatan Dosen) -->
+  <div class="modal-overlay" id="modul1IntroModal" onclick="closeModalOnBackdrop(event, 'modul1IntroModal')">
+    <div class="modal-dialog" style="max-width: 580px;">
+      <div class="modal-header" style="background: rgba(139, 92, 246, 0.28);">
+        <div style="display: flex; align-items: center; gap: 10px;">
+          <span style="font-size: 24px;">🎯</span>
+          <h3 style="margin: 0; color: var(--black);">Tujuan Pembelajaran Modul 1</h3>
+        </div>
+        <button class="modal-close" onclick="closeModul1IntroModal()">&times;</button>
+      </div>
+      <div class="modal-body" style="padding: 26px;">
+        <div style="background: var(--blue-light); border: 2px solid var(--black); border-radius: 12px; padding: 16px; margin-bottom: 18px; box-shadow: var(--shadow-sm);">
+          <p style="margin: 0; font-size: 15px; font-weight: 700; color: var(--black);">
+            👋 Halo siswa hebat! Hari ini kita akan belajar <u>Prinsip-Prinsip Dasar Desain Grafis</u>.
+          </p>
+        </div>
+        
+        <h4 style="font-size: 16px; margin-bottom: 10px; color: var(--black);">Setelah menyelesaikan modul ini, siswa diharapkan mampu:</h4>
+        <ul style="padding-left: 20px; line-height: 1.7; font-size: 14.5px; color: var(--text-main); margin-bottom: 22px;">
+          <li><strong>Menjelaskan 9 prinsip dasar desain</strong> (Unity, Balance, Composition, Proportion, Rhythm, Emphasis, Simplicity, Clarity, Space) dengan tepat.</li>
+          <li><strong>Mengidentifikasi penerapan prinsip desain</strong> pada karya visual melalui pengamatan karya beranotasi.</li>
+          <li><strong>Menganalisis keseimbangan (Balance)</strong> baik simetris maupun asimetris pada komposisi grafis.</li>
+          <li><strong>Menentukan titik pusat perhatian (Emphasis)</strong> pada media grafis sebelum melanjutkan ke praktik software.</li>
+        </ul>
+
+        <div style="display: flex; justify-content: flex-end; gap: 12px;">
+          <button class="btn-primary" onclick="confirmModul1Start()" style="width: 100%;">
+            <span>Saya Siap Belajar! Masuk ke Modul 1 &rarr;</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <!-- MODAL: Glosarium Istilah Akordion (F12) -->
   <div class="modal-overlay" id="glossaryModal" onclick="closeModalOnBackdrop(event, 'glossaryModal')">
     <div class="modal-dialog">
@@ -657,6 +990,14 @@
         <button class="modal-close" onclick="closeGlossaryModal()">&times;</button>
       </div>
       <div class="modal-body">
+        
+        <!-- Filter Kategori Modul Glosarium (Catatan Dosen) -->
+        <div style="display: flex; gap: 8px; margin-bottom: 16px; flex-wrap: wrap;">
+          <button class="toggle-btn active" id="btnScopeAll" onclick="setGlossaryScope('ALL')">Semua Modul</button>
+          <button class="toggle-btn" id="btnScopeM1" onclick="setGlossaryScope('Modul 1')">Modul 1 (Prinsip)</button>
+          <button class="toggle-btn" id="btnScopeM2" onclick="setGlossaryScope('Modul 2')">Modul 2 (Software)</button>
+          <button class="toggle-btn" id="btnScopeM3" onclick="setGlossaryScope('Modul 3')">Modul 3 (Komunikasi)</button>
+        </div>
         <input type="text" id="glossarySearch" placeholder="Cari istilah (contoh: Balance, Unity, Space)..." onkeyup="filterGlossary()" style="width:100%; height:44px; padding:0 14px; border:1px solid var(--border); border-radius:8px; margin-bottom:16px; font-size:14px;">
         <div id="glossaryList" style="max-height: 380px; overflow-y: auto;"></div>
       </div>
@@ -667,10 +1008,10 @@
   <div class="modal-overlay" id="lockedModal" onclick="closeModalOnBackdrop(event, 'lockedModal')">
     <div class="modal-dialog" style="max-width: 440px; text-align: center;">
       <div class="modal-body" style="padding: 32px 24px;">
-        <div style="width: 60px; height: 60px; border-radius: 50%; background: #FEF3C7; color: var(--amber-dark); display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
+        <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(245, 158, 11, 0.22); border: 1px solid rgba(245, 158, 11, 0.45); color: #FBBF24; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px;">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
         </div>
-        <h3 id="lockedModalTitle" style="color: var(--navy); margin-bottom: 8px;">Modul Masih Terkunci</h3>
+        <h3 id="lockedModalTitle" style="color: var(--black); margin-bottom: 8px;">Modul Masih Terkunci</h3>
         <p class="small" id="lockedModalDesc" style="color: var(--text-soft); margin-bottom: 24px;">
           Selesaikan Kuis Modul 1 dengan skor minimal 75 untuk membuka modul berikutnya.
         </p>
