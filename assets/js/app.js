@@ -282,13 +282,19 @@ function updateProgressUI() {
   if (m1Text) m1Text.textContent = `${pct}% (${count}/${total} Prinsip)`;
   if (m1Bar) m1Bar.style.width = pct + '%';
 
-  // Overall progress (9 M1 checkpoints + 1 Kuis Akhir + 1 M2 submit + 1 M3 checkpoint = 12)
-  const kuisDone = isModul2Unlocked() ? 1 : 0;
-  const m2Done = localStorage.getItem('grafikaku_m2_submitted') === 'true' ? 1 : 0;
-  const m3Done = localStorage.getItem('grafikaku_m3_checkpoint_passed') === 'true' ? 1 : 0;
-  const totalMilestones = total + 3;
-  const doneMilestones = count + kuisDone + m2Done + m3Done;
-  const overallPct = Math.round((doneMilestones / totalMilestones) * 100);
+  // Progres Keseluruhan: Bobot seimbang per Modul (Masing-masing 33.33% / total 100%)
+  // Modul 1 (0 - 33.3%): berdasarkan 9 prinsip (count / total * 33.33)
+  // Modul 2 (0 - 33.3%): submit tugas karya (m2Done ? 33.33 : 0)
+  // Modul 3 (0 - 33.3%): alur & checkpoint M3 (m3FlowDone: 16.67%, m3CpDone: 16.67%)
+  const m1Share = (count / total) * (100 / 3);
+  const m2Done = localStorage.getItem('grafikaku_m2_submitted') === 'true';
+  const m2Share = m2Done ? (100 / 3) : 0;
+  const m3FlowDone = localStorage.getItem('grafikaku_m3_flow_ok') === 'true';
+  const m3CpDone = localStorage.getItem('grafikaku_m3_checkpoint_passed') === 'true';
+  const m3Share = (m3FlowDone ? (50 / 3) : 0) + (m3CpDone ? (50 / 3) : 0);
+
+  const kuisDone = isModul2Unlocked();
+  const overallPct = Math.min(100, Math.round(m1Share + m2Share + m3Share));
 
   const overallBar = document.getElementById('overallProgressBarFill');
   const overallNum = document.getElementById('overallProgressNumber');
@@ -298,7 +304,7 @@ function updateProgressUI() {
   if (overallSub) {
     overallSub.textContent = overallPct === 0
       ? 'Belum ada progres. Mulai dari Modul 1 untuk membuka modul berikutnya.'
-      : `Modul 1: ${count}/${total} prinsip selesai • Kuis: ${kuisDone ? 'Tuntas' : 'Belum'} • Modul 2: ${m2Done ? 'Terkumpul' : 'Belum'} • Modul 3: ${m3Done ? 'Selesai' : 'Belum'}`;
+      : `Modul 1: ${pct}% • Kuis: ${kuisDone ? 'Tuntas' : 'Belum'} • Modul 2: ${m2Done ? '100%' : '0%'} • Modul 3: ${Math.round(m3Share * 3)}%`;
   }
 
   // Overall banner or badges if exist
@@ -435,10 +441,10 @@ function showView(viewName) {
     updateProgressUI();
     updateUnlockUI();
   } else if (viewName === 'modul2') {
-    renderSoftwareSteps();
+    selectSoftwareView(currentSelectedSoftware || 'photoshop');
     renderSubmissionStatus();
-  updateProgressUI();
-  updateUnlockUI();
+    updateProgressUI();
+    updateUnlockUI();
   } else if (viewName === 'kuis') {
     renderQuizContainer();
   }
@@ -547,10 +553,24 @@ function renderPrincipleContent() {
   if (dotsCont) {
     dotsCont.innerHTML = '';
     principlesData.forEach((_, idx) => {
+      const unlocked = isPrincipleUnlocked(idx);
       const dot = document.createElement('span');
-      dot.className = 'dot-item' + (idx === currentPrincipleIndex ? ' active' : '');
-      dot.title = principlesData[idx].name;
+      dot.className = 'dot-item' + (idx === currentPrincipleIndex ? ' active' : '') + (!unlocked ? ' locked' : '');
+      dot.title = unlocked
+        ? principlesData[idx].name
+        : `${principlesData[idx].name} (Terkunci — selesaikan prinsip sebelumnya)`;
+      if (!unlocked) {
+        dot.style.opacity = '0.35';
+        dot.style.cursor = 'not-allowed';
+      }
       dot.onclick = () => {
+        if (!isPrincipleUnlocked(idx)) {
+          openLockedModal(
+            'Prinsip Masih Terkunci!',
+            `Selesaikan pertanyaan evaluasi pemahaman pada prinsip sebelumnya terlebih dahulu sebelum membuka ${principlesData[idx].name}.`
+          );
+          return;
+        }
         currentPrincipleIndex = idx;
         renderPrincipleTabs();
         renderPrincipleContent();
@@ -1419,6 +1439,24 @@ const softwareStepsData = {
   ]
 };
 
+const softwareVideoData = {
+  photoshop: {
+    name: "Adobe Photoshop",
+    embedUrl: "https://www.youtube.com/embed/HnkK9XuimhA",
+    caption: "Video tutorial SOP Adobe Photoshop: pembuatan dokumen 1080 × 1350 px, penataan layer/shape tumbler, dan ekspor PNG."
+  },
+  coreldraw: {
+    name: "CorelDRAW",
+    embedUrl: "https://www.youtube.com/embed/8GMCpXM_NFM",
+    caption: "Video tutorial SOP CorelDRAW: setup page 1080 × 1350 px, pembuatan objek vektor tumbler, dan ekspor format PNG."
+  },
+  canva: {
+    name: "Canva",
+    embedUrl: "https://www.youtube.com/embed/yfKpkN01NNo",
+    caption: "Video tutorial SOP Canva: custom size 1080 × 1350 px, penataan elemen grafis tumbler, dan unduh berkas PNG."
+  }
+};
+
 function selectSoftwareView(software) {
   currentSelectedSoftware = software;
   const btnPs = document.getElementById('btnSoftwarePs');
@@ -1429,7 +1467,25 @@ function selectSoftwareView(software) {
   if (btnCdr) btnCdr.classList.toggle('active', software === 'coreldraw');
   if (btnCanva) btnCanva.classList.toggle('active', software === 'canva');
 
+  updateTutorialVideo(software);
   renderSoftwareSteps();
+}
+
+function updateTutorialVideo(software) {
+  const vData = softwareVideoData[software] || softwareVideoData.photoshop;
+  const iframe = document.getElementById('tutorialVideoIframe');
+  const caption = document.getElementById('tutorialVideoCaption');
+  const badge = document.getElementById('activeVideoSoftwareBadge');
+
+  if (iframe && vData.embedUrl) {
+    iframe.src = vData.embedUrl;
+  }
+  if (caption && vData.caption) {
+    caption.textContent = vData.caption;
+  }
+  if (badge && vData.name) {
+    badge.textContent = vData.name;
+  }
 }
 
 function renderSoftwareSteps() {
