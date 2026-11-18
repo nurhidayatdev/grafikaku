@@ -44,7 +44,10 @@ function renderStudentIdentityBadge() {
     const absenText = profile.absen ? ` • No. ${profile.absen}` : '';
     badge.innerHTML = `
       <span>👤 <strong>${profile.nama}</strong> (${profile.kelas}${absenText})</span>
-      <button type="button" class="student-badge-edit" onclick="openStudentProfileModal()">Ubah</button>
+      <div style="display: inline-flex; gap: 6px;">
+        <button type="button" class="student-badge-edit" onclick="openStudentProfileModal()">Ubah</button>
+        <button type="button" class="student-badge-logout" onclick="confirmResetStudentSession()">Ganti Siswa</button>
+      </div>
     `;
     badge.style.display = 'inline-flex';
   } else {
@@ -53,6 +56,51 @@ function renderStudentIdentityBadge() {
       <button type="button" class="student-badge-edit" onclick="openStudentProfileModal()">Isi Nama</button>
     `;
     badge.style.display = 'inline-flex';
+  }
+}
+
+function resetStudentSession() {
+  // Bersihkan data siswa aktif dari localStorage perangkat lab
+  const keysToRemove = [
+    'grafikaku_student_profile',
+    'grafikaku_passed_checkpoints',
+    'grafikaku_visited_principles',
+    'grafikaku_modul2_unlocked',
+    'grafikaku_latihan_emphasis_ok',
+    'grafikaku_latihan_sop_ok',
+    'grafikaku_kuis_last_score',
+    'grafikaku_kuis_last_correct',
+    'grafikaku_kuis_last_total',
+    'grafikaku_m2_submitted',
+    'grafikaku_m2_filename',
+    'grafikaku_m2_file_url',
+    'grafikaku_m3_flow_ok',
+    'grafikaku_m3_checkpoint_passed'
+  ];
+  keysToRemove.forEach(k => localStorage.removeItem(k));
+
+  // Reset tampilan UI
+  renderStudentIdentityBadge();
+  if (typeof updateProgressUI === 'function') updateProgressUI();
+  if (typeof updateUnlockUI === 'function') updateUnlockUI();
+  if (typeof renderSubmissionStatus === 'function') renderSubmissionStatus();
+  if (typeof renderPrincipleTabs === 'function') renderPrincipleTabs();
+  if (typeof renderPrincipleCheckpoint === 'function') renderPrincipleCheckpoint();
+  if (typeof navigateTo === 'function') navigateTo('beranda');
+
+  alert('Sesi siswa berhasil di-reset. Siswa berikutnya silakan klik "Mulai Belajar" atau "Isi Nama" untuk memulai dengan identitas baru.');
+}
+
+function confirmResetStudentSession() {
+  const profile = getStudentProfile();
+  const nama = profile ? profile.nama : 'siswa ini';
+  const konfirmasi = confirm(
+    `Apakah Anda ingin mengakhiri sesi untuk ${nama} di komputer ini?\n\n` +
+    `• Progres yang sudah tersimpan di database Supabase tetap AMAN.\n` +
+    `• Perangkat ini akan bersih kembali (0%) siap digunakan oleh siswa berikutnya.`
+  );
+  if (konfirmasi) {
+    resetStudentSession();
   }
 }
 
